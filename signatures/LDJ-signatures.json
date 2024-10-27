@@ -144,6 +144,12 @@
                 "adjust": 5,
                 "data": "BA 0C 00 00 00 90",
                 "patchall": true
+            },
+            {
+                "start": 8000000,
+                "signature": "33 D2 48 F7 F3 48 8B 9C 24",
+                "data": "BA 0C 00 00 00",
+                "patchall": true
             }
         ]
     },
