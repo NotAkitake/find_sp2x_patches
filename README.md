@@ -3,7 +3,7 @@
 ## About
 
 - `find_sp2x_patches.py` finds as many Spice2x patches as possible for various game versions.
-- `find_all_occurences.py` is a helper script to quickly test run a signature search for a specific DLL.
+- `print_all_occurences.py` is a helper script to quickly test run a signature search for a specific DLL.
 
 **Notes**: 
 1. The provided **signatures will break over time**, I will however do my best to keep updating them as time goes on.
