@@ -81,7 +81,7 @@ The signature file is the same for both LDJ-010 and LDJ-012 dlls, and these are 
 
 **2.**
 
-```
+```pwsh
 2.
 > python .\find_sp2x_patches.py --game KFC --loglevel DEBUG
 2024-10-27 16:45:41,985 - INFO: [KFC]
