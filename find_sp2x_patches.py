@@ -307,9 +307,41 @@ def kfc_001(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: s
     subpatch = MemorySubPatch(offset, dll_name, data_disabled, data_enabled)
     return MemoryPatch(name, description, game_code, [ subpatch ], caution)
 
-# TODO: FAKE REGION
+# FAKE REGION
 def kfc_002(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: str, description: str, caution: str = None):
-    ...
+    pe = pefile.PE(dll_path, fast_load=True)
+
+    # Signature for instruction that sets J region
+    setter_offset = find("89 05 ?? ?? ?? ?? 48 8B 4C 24 ?? 48 33 CC E8 ?? ?? ?? ?? 48 83 C4 58 C3 B8 02 00 00 00", dll)
+    if setter_offset is None: return None
+
+    # skip two bytes, next 4 bytes (little endian) are rip relative address to our data
+    dll.seek(setter_offset + 2)
+    region_offset = struct.unpack("<i", dll.read(4))[0]
+
+    # rip is already the next instruction
+    region_address = pe.get_rva_from_offset(setter_offset + 6) + region_offset
+
+    # Signature for our patch location
+    offset = find("E8 ?? ?? ?? ?? 85 C0 0F 85 ?? ?? ?? ?? 8D 48 ?? FF 15 ?? ?? ?? ?? 48 8B C8", dll)
+    if offset is None: return None
+    offset_rva = pe.get_rva_from_offset(offset)
+
+    # Need rip to be pointed after the mov instruction, and there is a 5 byte and 6 byte instruction in our patch
+    relative_address = region_address - (offset_rva + 5 + 6)
+    address_string = struct.pack("<i", relative_address).hex().upper()
+
+    # UNION OPTIONS
+    dll.seek(offset)
+    default  = UnionSubPatch("Default", offset, dll_name, dll.read(13).hex().upper())
+    japan = UnionSubPatch("Japan", offset, dll_name, "B8000000008905" +  address_string + "9090")
+    korea = UnionSubPatch("Korea", offset, dll_name, "B8010000008905" + address_string + "9090")
+    asia = UnionSubPatch("Asia", offset, dll_name, "B8020000008905" + address_string + "9090")
+    indonesia = UnionSubPatch("Indonesia", offset, dll_name, "B8030000008905" + address_string + "9090")
+    america = UnionSubPatch("America", offset, dll_name, "B8040000008905" + address_string + "9090")
+
+    return UnionPatch(name, description, game_code, [ default, japan, korea, asia, indonesia, america ], caution)
+
 
 # REROUTE 'FREE PLAY' TEXT
 def ldj_001(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: str, description: str, caution: str = None):
@@ -408,6 +440,8 @@ def main():
                             match patch_id:
                                 case "kfc_001":
                                     patch = kfc_001(dll, dll_path, dll_name, game_code, entry_name, entry_desc, entry_caution)
+                                case "kfc_002":
+                                    patch = kfc_002(dll, dll_path, dll_name, game_code, entry_name, entry_desc, entry_caution)
                                 case "ldj_001":
                                     patch = ldj_001(dll, dll_path, dll_name, game_code, entry_name, entry_desc, entry_caution)
                                 case _:
