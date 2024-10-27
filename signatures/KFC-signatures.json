@@ -245,6 +245,12 @@
         ]
     },
     {
+        "type": "hardcoded",
+        "name": "Fake Region",
+        "description": "Forces the game to run as a specific region without altering language, which allows for region-specific content locking. Use Japan for everything to be unlocked.",
+        "id": "kfc_002"
+    },
+    {
         "type": "memory",
         "name": "ASIO 2 Channels Mode",
         "description": "Use 2 channels instead of 8. Useful for some audio cards.",
@@ -335,11 +341,5 @@
                 "data": "A7 0C"
             }
         ]
-    },
-    {
-        "type": "hardcoded",
-        "name": "Fake Region",
-        "description": "Forces the game to run as a specific region without altering language, which allows for region-specific content locking. Use Japan for everything to be unlocked.",
-        "id": "kfc_002"
     }
 ]
