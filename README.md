@@ -2,13 +2,12 @@
 
 ## About
 
-- `find_sp2x_patches.py` finds as many Spice2x patches as possible for various game versions.  
-To do so, it uses signatures and various complementary information contained in .json files within the signatures directory.
-- `find_all_occurences.py` is a helper script to quickly run a signature search on a specific DLL.
+- `find_sp2x_patches.py` finds as many Spice2x patches as possible for various game versions.
+- `find_all_occurences.py` is a helper script to quickly test run a signature search for a specific DLL.
 
 **Notes**: 
-1. The provided signatures will break over time, I will however do my best to keep updating them as time goes on.
-2. The provided signatures are built for the bleeding edge of n-0, don't expect them to work for older content.
+1. The provided **signatures will break over time**, I will however do my best to keep updating them as time goes on.
+2. The provided **signatures are built for the bleeding edge of n-0**, don't expect them to work for older content.
 3. Documentation on how to create the signatures files **will come soon**. In the meantime you should be able to figure it out by reading their format.
 
 ## Requirements
@@ -18,7 +17,7 @@ To do so, it uses signatures and various complementary information contained in 
 ## Directories
 
 - `dlls` Contains game's .dll files you want to find patches for.
-- `patches` Is the output folder for the script.
+- `patches` Is the output folder for spice2x-compatible .json files.
 - `signatures` Contains `<gamecode>-signatures.json` files used by the script to determine patches.
 
 ## Usage
@@ -39,9 +38,9 @@ The script will attempt to find patches for all corresponding dll files inside t
 Logs are sent to the console AND to a `logs.txt` file.  
 The console will only show INFO and above messages by default, but this argument lets you change that.  
 `logs.txt` logs everything, even DEBUG messages regardless of the set loglevel.  
-*Note: `logs.txt` gets overwritten on every run.*
+`logs.txt` gets overwritten on every run.
 
-Spice2x-compatible patches.json files get outputted to the `patches` directory.
+Spice2x-compatible patches.json files are outputted to the `patches` directory.
 
 ### Examples
 
