@@ -1,3 +1,6 @@
+__pycache__
+.idea
 *.dll
 *.json
+!*-signatures.json
 logs.txt
