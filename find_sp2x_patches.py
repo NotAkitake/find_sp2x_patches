@@ -334,14 +334,13 @@ def kfc_002(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: s
     # UNION OPTIONS
     dll.seek(offset)
     default  = UnionSubPatch("Default", offset, dll_name, dll.read(13).hex().upper())
-    japan = UnionSubPatch("Japan", offset, dll_name, "B8000000008905" +  address_string + "9090")
+    japan = UnionSubPatch("Japan", offset, dll_name, "B8000000008905" + address_string + "9090")
     korea = UnionSubPatch("Korea", offset, dll_name, "B8010000008905" + address_string + "9090")
     asia = UnionSubPatch("Asia", offset, dll_name, "B8020000008905" + address_string + "9090")
     indonesia = UnionSubPatch("Indonesia", offset, dll_name, "B8030000008905" + address_string + "9090")
     america = UnionSubPatch("America", offset, dll_name, "B8040000008905" + address_string + "9090")
 
     return UnionPatch(name, description, game_code, [ default, japan, korea, asia, indonesia, america ], caution)
-
 
 # REROUTE 'FREE PLAY' TEXT
 def ldj_001(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: str, description: str, caution: str = None):
