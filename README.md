@@ -12,7 +12,9 @@
 
 ## Requirements
 
-- **Python 3**
+- **Python 3**  
+- **pip**  
+- `pefile` library, can be installed with `pip install -r requirements.txt`
 
 ## Directories
 
