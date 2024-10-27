@@ -335,5 +335,11 @@
                 "data": "A7 0C"
             }
         ]
+    },
+    {
+        "type": "hardcoded",
+        "name": "Fake Region",
+        "description": "Forces the game to run as a specific region without altering language, which allows for region-specific content locking. Use Japan for everything to be unlocked.",
+        "id": "kfc_002"
     }
 ]
