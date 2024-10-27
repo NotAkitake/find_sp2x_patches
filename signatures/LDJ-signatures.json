@@ -140,16 +140,13 @@
         "patches": [
             {
                 "start": 8000000,
-                "signature": "C1 49 C1 E8 3F 4D 03 C8 49 F7 F1",
-                "adjust": 5,
-                "data": "BA 0C 00 00 00 90",
-                "patchall": true
+                "signature": "4D 03 C8 49 F7 F1 89 53",
+                "data": "BA 0C 00 00 00 90"
             },
             {
                 "start": 8000000,
                 "signature": "33 D2 48 F7 F3 48 8B 9C 24",
-                "data": "BA 0C 00 00 00",
-                "patchall": true
+                "data": "BA 0C 00 00 00"
             }
         ]
     },
