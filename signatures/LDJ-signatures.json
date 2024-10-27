@@ -168,8 +168,8 @@
         "patches": [
             {
                 "start": 7000000,
-                "signature": "0F 59 05 ?? ?? ?? 00 F3 0F 58 05 ?? ?? ?? 00 F3 0F 2C C0 3B D8 7C",
-                "adjust": 22,
+                "signature": "E8 ?? ?? 12 00 66 0F 6E C0 0F 5B C0 F3 0F 59 05 ?? ?? ?? 00 F3 0F 58 05 ?? ?? ?? 00 F3 0F 2C C0 3B D8 7C",
+                "adjust": 34,
                 "data": "90 90"
             }
         ]
