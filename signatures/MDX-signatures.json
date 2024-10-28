@@ -1,0 +1,130 @@
+[
+    {
+        "gameCode": "MDX",
+        "dllName": "gamemdx.dll",
+        "lastUpdated": "2024-10-28",
+        "source": "https://sp2x.two-torial.xyz/"
+    },
+    {
+        "type": "memory",
+        "name": "Mute Announcer",
+        "description": "Mutes the announcer voice.",
+        "patches": [
+            {
+                "start": 200000,
+                "signature": "40 85 C0 0F 84 AE 03 00 00 83 F8 03 0F 84 A5 03",
+                "adjust": 3,
+                "data": "90 E9"
+            },
+            {
+                "start": 2000000,
+                "signature": "73 ?? 00 00 76 6F 69 63 65 00 00 00 ?? ?? ?? 10",
+                "adjust": 4,
+                "data": "62"
+            }
+        ]
+    },
+    {
+        "type": "memory",
+        "name": "Timer Freeze",
+        "description": "Freezes all timers.",
+        "patches": [
+            {
+                "start": 150000,
+                "signature": "63 7E 05 BE 63 00 00 00 39 B3 94 00 00 00 0F 84",
+                "adjust": 14,
+                "data": "90 E9"
+            }
+        ]
+    },
+    {
+        "type": "memory",
+        "name": "Disable Konami Song and Skip Konami Logo",
+        "description": "Disables the Konami jingle and its animation when starting the game.",
+        "patches": [
+            {
+                "start": 2000000,
+                "signature": "6C 6F 67 6F 5F 6B 6F 6E 61 6D 69 00 6C 6F 67 6F",
+                "data": "62"
+            }
+        ]
+    },
+    {
+        "type": "number",
+        "name": "Render Offset",
+        "description": "Sets the render offset (Default: 2).",
+        "patch": {
+            "start": 100000,
+            "signature": "00 00 00 B9 57 00 00 00 BA 24 00 00 00 BE 02 00",
+            "adjust": 14,
+            "size": 4,
+            "min": 0,
+            "max": 1000
+        }
+    },
+    {
+        "type": "number",
+        "name": "Bomb Frame Offset",
+        "description": "Sets the bomb frame offset (Default: 1).",
+        "patch": {
+            "start": 100000,
+            "signature": "00 00 00 B9 57 00 00 00 BA 24 00 00 00 BE 02 00",
+            "adjust": -1,
+            "size": 4,
+            "min": 0,
+            "max": 10
+        }
+    },
+    {
+        "type": "number",
+        "name": "Sound Offset",
+        "description": "Larger numbers make audio later (Default: 87)",
+        "patch": {
+            "start": 100000,
+            "signature": "00 00 00 B9 57 00 00 00 BA 24 00 00 00 BE 02 00",
+            "adjust": 4,
+            "size": 4,
+            "min": 0,
+            "max": 1000
+        }
+    },
+    {
+        "type": "memory",
+        "name": "Fake Premium Free",
+        "description": "Fakes a Premium Free-like mode.",
+        "caution": "Make sure your network supports and allows this before enabling! BUG: ghost score pacemaker indicator doesn't reload in the same round if a new best is achieved.",
+        "patches": [
+            {
+                "start": 100000,
+                "signature": "89 0D ?? ?? ?? 10 8B 02 01 48 0C E9",
+                "adjust": 8,
+                "data": "89"
+            }
+        ]
+    },
+    {
+        "type": "memory",
+        "name": "Hide all bottom text",
+        "description": "Hides all text typically found in the bottom corners of the screen such as \"CREDITS\", \"TOKEN\", \"PASELI\", \"FREE PLAY\", etc..",
+        "patches": [
+            {
+                "start": 1500000,
+                "signature": "45 56 45 4E 54 20 4D 4F 44 45 00 00 46 52 45 45 20 50 4C 41 59 00 00 00 53 00 00 00 20 00 00 00 54 4F 4B 45 4E 00 00 00 43 4F 49 4E 00 00 00 00 25 73 25 73 3A 25 32 64 2F 25 32 64 00 00 00 00 43 52 45 44 49 54 25 73 3A 25 32 64 00 00 00 00 30 30 30 30 30 00 00 00 30 30 30 30 30 30 00 00 2A 2A 2A 2A 2A 2A 00 00 50 41 53 45 4C 49 3A 20 25 73 20 2B 20 25 73 00 50 41 53 45 4C 49 3A 20 25 73 00 00 45 58 54 52 41 20 50 41 53 45 4C 49 3A 20 25 73 00 00 00 00 50 41 53 45 4C 49 3A 20 4E 4F 54 20 41 56 41 49 4C 41 42 4C 45 00 00 00 4C 4F 43 41 4C 20 4D 4F 44 45 00 00 4F 46 46 4C 49 4E 45 20 4D 4F 44 45 00 00 00 00 4D 41 49 4E 54 45 4E 41 4E 43 45 00 43 48 45 43 4B 49 4E 47 00 00 00 00 43 48 45 43 4B 49 4E 47 2E 00 00 00 43 48 45 43 4B 49 4E 47 2E 2E 00 00 43 48 45 43 4B 49 4E 47 2E 2E 2E 00 4F 4E 4C 49 4E 45 00 00 45 52 52 4F 52 00 00 00 4E 4F 54 20 41 56 41 49 4C 41 42 4C 45",
+                "data": "NUL"
+            }
+        ]
+    },
+    {
+        "type": "memory",
+        "name": "Disable Background Movies",
+        "description": "Disables background movies from playing during gameplay.",
+        "patches": [
+            {
+                "signature": "64 61 74 61 2F 6D 64 62 5F 61 70 78 2F 6D 6F 76 69 65",
+                "adjust": 13,
+                "data": "5F",
+                "patchall": true
+            }
+        ]
+    }
+]
