@@ -8,7 +8,7 @@
     {
         "type": "memory",
         "name": "Menu Timer Freeze",
-        "description": "Freezes Menu timer.",
+        "description": "Freezes menu timers.",
         "patches": [
             {
                 "start": 3100000,
@@ -32,7 +32,7 @@
     },
     {
         "type": "memory",
-        "name": "Unscramble PIN pad",
+        "name": "Unscramble Touch Screen Keypad",
         "description": "Unscrambles the touchscreen's Keypad.",
         "patches": [
             {
@@ -44,8 +44,8 @@
     },
     {
         "type": "memory",
-        "name": "Hide 'EXTRA PASELI: %d'",
-        "description": "Freezes Menu timer.",
+        "name": "Hide \"EXTRA PASELI: %d\" Text",
+        "description": "Hides the bottom text \"EXTRA PASELI: %d\".",
         "patches": [
             {
                 "start": 6000000,
@@ -61,8 +61,8 @@
     },
     {
         "type": "memory",
-        "name": "Hide PASELI: *****'",
-        "description": "Freezes Menu timer.",
+        "name": "Hide \"PASELI: *****\" Text",
+        "description": "Hides the bottom text \"PASELI: *****\".",
         "patches": [
             {
                 "start": 3100000,
@@ -73,8 +73,8 @@
     },
     {
         "type": "memory",
-        "name": "Hide Credit Count",
-        "description": "Hides 'CREDIT: %d' and 'CREDIT %d  COIN: %d / %d'.",
+        "name": "Hide Credit/Coin Text",
+        "description": "Hides \"CREDIT: %d\" and \"CREDIT %d  COIN: %d / %d\".",
         "patches": [
             {
                 "start": 6000000,
