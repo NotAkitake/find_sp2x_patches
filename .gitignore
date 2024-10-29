@@ -4,3 +4,5 @@ __pycache__
 *.json
 !*-signatures.json
 logs.txt
+/.vs
+/.gitignore
