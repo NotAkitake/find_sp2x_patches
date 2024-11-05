@@ -287,7 +287,7 @@ def set_logger(loglevel: str) -> None:
     logger.addHandler(console_handler)
 
 # HIDE PREMIUM GUIDE BANNER
-def kfc_001(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: str, description: str, caution: str = None):
+def kfc_001(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: str, description: str, caution: str = None) -> MemoryPatch | None:
     pe = pefile.PE(dll_path, fast_load=True)
 
     # Signature is 'pt_sousa_usr'
@@ -308,7 +308,7 @@ def kfc_001(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: s
     return MemoryPatch(name, description, game_code, [ subpatch ], caution)
 
 # FAKE REGION
-def kfc_002(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: str, description: str, caution: str = None):
+def kfc_002(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: str, description: str, caution: str = None) -> UnionPatch | None:
     pe = pefile.PE(dll_path, fast_load=True)
 
     # Signature for instruction that sets J region
@@ -343,7 +343,7 @@ def kfc_002(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: s
     return UnionPatch(name, description, game_code, [ default, japan, korea, asia, indonesia, america ], caution)
 
 # REROUTE 'FREE PLAY' TEXT
-def ldj_001(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: str, description: str, caution: str = None):
+def ldj_001(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: str, description: str, caution: str = None) -> UnionPatch | None:
     pe = pefile.PE(dll_path, fast_load=True)
 
     # TICKER OFFSET
@@ -370,6 +370,30 @@ def ldj_001(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: s
     hide = UnionSubPatch("Hide", offset, dll_name, str(struct.pack("<i", hidden - pe.get_rva_from_offset(offset) - 4).hex().upper()))
 
     return UnionPatch(name, description, game_code, [ default, ticker_info, hide ], caution)
+
+# Reroute PASELI: ****** Text To Song Title/Ticker Information
+def ldj_002(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: str, description: str, caution: str = None) -> MemoryPatch | None:
+    pe = pefile.PE(dll_path, fast_load=True)
+
+    # TICKER OFFSET
+    ticker_offset = find("48 8D 0D ?? ?? ?? ?? 48 8B D3 FF 15 ?? ?? ?? ?? 48 8B 5C 24 ?? 33 C0 89 3D ?? ?? ?? ?? 48 83 C4 20 5F C3", dll, 8000000, 3)
+    if ticker_offset is None: return None
+    relative = pe.get_rva_from_offset(ticker_offset)
+    dll.seek(ticker_offset)
+    ticker_offset = struct.unpack("<i", dll.read(4))[0]
+    absolute_ticker_offset = relative + ticker_offset
+
+    # MEMPATCH OFFSET
+    offset = find("00 FF 15 ?? ?? ?? 00 EB 17 4C 8D 05 ?? ?? ?? 00 BA 00 01 00 00 48 8D", dll, 0, 12)
+    if offset is None: return None
+
+    # MEMPATCH OPTIONS
+    dll.seek(offset)
+    data_enabled = struct.pack("<i", absolute_ticker_offset - pe.get_rva_from_offset(offset)).hex().upper()
+    data_disabled = dll.read(round(len(data_enabled) / 2)).hex().upper()
+
+    subpatch = MemorySubPatch(offset, dll_name, data_disabled, data_enabled)
+    return MemoryPatch(name, description, game_code, [ subpatch ], caution)
 
 # TODO: Make main less nested and bloated, delegate functionality elsewhere, optimize where possible.
 def main():
@@ -443,6 +467,8 @@ def main():
                                     patch = kfc_002(dll, dll_path, dll_name, game_code, entry_name, entry_desc, entry_caution)
                                 case "ldj_001":
                                     patch = ldj_001(dll, dll_path, dll_name, game_code, entry_name, entry_desc, entry_caution)
+                                case "ldj_002":
+                                    patch = ldj_002(dll, dll_path, dll_name, game_code, entry_name, entry_desc, entry_caution)
                                 case _:
                                     patch = None
 

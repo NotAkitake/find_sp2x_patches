@@ -242,6 +242,12 @@
         "id": "ldj_001"
     },
     {
+        "type": "hardcoded",
+        "name": "Reroute PASELI: ****** Text To Song Title/Ticker Information",
+        "description": "Reroute PASELI: ****** Text to Song Title/Ticker Information.",
+        "id": "ldj_002"
+    },
+    {
         "type": "memory",
         "name": "Hide All Bottom Text",
         "description": "Hides all text typically found in the bottom corners of the screen such as \"PASELI\" or \"FREE PLAY\".",
