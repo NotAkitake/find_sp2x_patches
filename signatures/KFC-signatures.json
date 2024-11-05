@@ -286,8 +286,8 @@
         "patches": [
             {
                 "start": 3000000,
-                "signature": "E8 ?? ?? 27 00 33 DB 85 C0 75 42",
-                "adjust": 9,
+                "signature": "E8 ?? ?? 27 00 85 C0 75 2C E8 ?? ?? 27 00 48 8B C8 E8",
+                "adjust": 7,
                 "data": "EB"
             }
         ]
