@@ -109,6 +109,20 @@
     },
     {
         "type": "memory",
+        "name": "Video Purchase Timer Freeze",
+        "description": "Freezes the subscreen countdown on the transition from result to music select.",
+        "caution": "Only useful with a TDJ (010) dll.",
+        "patches": [
+            {
+                "start": 8000000,
+                "signature": "E8 1E F5 FF FF 84 C0 74 35 8B 47 64 85 C0 7E 2E FF C8",
+                "adjust": 16,
+                "data": "90 90"
+            }
+        ]
+    },
+    {
+        "type": "memory",
         "name": "CS-style Song Start Delay",
         "description": "Lets you pause at the start of a song by holding Start.",
         "patches": [
@@ -147,6 +161,18 @@
                 "start": 8000000,
                 "signature": "33 D2 48 F7 F3 48 8B 9C 24",
                 "data": "BA 0C 00 00 00"
+            }
+        ]
+    },
+    {
+        "type": "memory",
+        "name": "Skip Decide Screen",
+        "description": "Skips the splash animation that appears upon starting a song.",
+        "patches": [
+            {
+                "start": 5000000,
+                "signature": "48 8B C4 55 41 56 41 57 48 8D 68 A1 48 81 EC 00",
+                "data": "48 8B C1 C3"
             }
         ]
     },
@@ -224,13 +250,42 @@
     {
         "type": "memory",
         "name": "Disable Recording Lock",
-        "description": "Allows ALL songs to be recorded in-game. Still requires TDJ.",
+        "description": "Allows ALL songs to be recorded in-game.",
+        "caution": "Only useful with a TDJ (010) dll.",
         "patches": [
             {
                 "start": 7000000,
                 "signature": "E8 ?? ?? ?? FF 84 C0 74 17 40 84 FF 74 12 48 8B",
                 "adjust": 9,
                 "data": "90 90 90"
+            }
+        ]
+    },
+    {
+        "type": "memory",
+        "name": "Faster Video Uploads",
+        "description": "Makes video upload put request 1000 times faster in theory, by expanding InternetWriteFile() body chunk size to 0x3200000.",
+        "caution": "Only useful with a TDJ (010) dll.",
+        "patches": [
+            {
+                "start": 9000000,
+                "signature": "00 48 85 C9 0F 84 8B 00 00 00 41 BE 00 32 00 00",
+                "adjust": 12,
+                "data": "00 00 20 03"
+            }
+        ]
+    },
+    {
+        "type": "memory",
+        "name": "Force 120 FPS Recording Output .mp4",
+        "description": "Forces the game to record at 120 FPS.",
+        "caution": "Only useful with a TDJ (010) dll. Also make sure your hardware and network support this!",
+        "patches": [
+            {
+                "start": 9000000,
+                "signature": "80 07 00 00 38 04 00 00 3C 00 00 00 01 00 00 00",
+                "adjust": 8,
+                "data": "78"
             }
         ]
     },
