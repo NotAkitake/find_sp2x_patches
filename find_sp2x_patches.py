@@ -628,8 +628,8 @@ def main():
 
                 # Write to file
                 new_file_str = f"./patches/{get_identifier(game_code, dll)}"
-                if i < j:
-                    new_file_str += "_incomplete"
+                #if i < j:
+                    #new_file_str += "_incomplete"
                 new_file_str += ".json"
                 new_file = Path(new_file_str)
                 new_data = [json.loads(str(patch)) for patch in game_patches]
