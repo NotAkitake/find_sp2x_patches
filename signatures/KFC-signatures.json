@@ -48,7 +48,7 @@
         "patches": [
             {
                 "start": 5000000,
-                "signature": "BA 04 00 00 00 48 8B 0D ?? ?? C0 00 E8",
+                "signature": "BA 04 00 00 00 48 8B 0D ?? ?? ?? 00 E8 ?? ?? ?? 00 84 C0 0F 85 1A",
                 "adjust": 1,
                 "data": "00"
             }
@@ -161,7 +161,7 @@
         "patches": [
             {
                 "start": 4000000,
-                "signature": "00 06 0F 85 84 00 00 00 8B 05 ?? ?? D0 00 A8 01",
+                "signature": "00 06 0F 85 84 00 00 00 8B 05 ?? ?? ?? 00 A8 01",
                 "adjust": 2,
                 "data": "90 E9"
             },
@@ -183,7 +183,7 @@
         "name": "Premium Time Length",
         "description": "Time at which the Premium timer starts. If you have it frozen, that'll be the time shown at all times",
         "start": 4000000,
-        "signature": "89 2D ?? ?? D2 00 49 B8 00 70 C9 B2 8B 00 00 00",
+        "signature": "89 2D ?? ?? ?? 00 49 B8 00 70 C9 B2 8B 00 00 00",
         "adjust": 8,
         "patches": [
             {
@@ -313,7 +313,7 @@
         "patches": [
             {
                 "start": 300000,
-                "signature": "74 05 E8 4C F0 FF FF 48 8D 0D ?? ?? 53 00 FF 15",
+                "signature": "74 05 E8 4C F0 FF FF 48 8D 0D ?? ?? ?? 00 FF 15",
                 "data": "75"
             },
             {
