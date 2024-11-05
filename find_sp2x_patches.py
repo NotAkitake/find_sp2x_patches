@@ -601,7 +601,11 @@ def main():
                             continue
 
                 # Write to file
-                new_file = Path(f"./patches/{get_identifier(game_code, dll)}.json")
+                new_file_str = f"./patches/{get_identifier(game_code, dll)}"
+                if i < j:
+                    new_file_str += "_incomplete"
+                new_file_str += ".json"
+                new_file = Path(new_file_str)
                 new_data = [json.loads(str(patch)) for patch in game_patches]
                 try:
                     with open(new_file, "w", encoding='utf-8') as f:
