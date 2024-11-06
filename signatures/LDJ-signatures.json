@@ -9,7 +9,6 @@
         "type": "union",
         "name": "Force Audio Output Mode",
         "description": "Forces the game to use a specific audio protocol.",
-        "caution": "This patch is REQUIRED for WASAPI users. Spice2x's \"-iidxsounddevice\" no longer works for Epolis and above.",
         "start": 9000000,
         "signature": "FF 50 08 E8 ?? ?? EC FF 83 78 08 03 74 0D",
         "adjust": 3,
