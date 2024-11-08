@@ -471,7 +471,7 @@
         "description": "Forces LDJ Software Video Decoder for all boot modes, could help on systems that can't load videos properly.",
         "patches": [
             {
-                "start": 9614417,
+                "start": 8000000,
                 "signature": "48 8B A8 00 80 01 00 0F 85 86 00 00 00 E8",
                 "adjust": 7,
                 "data": "90 90 90 90 90 90"
