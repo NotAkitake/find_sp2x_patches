@@ -48,7 +48,7 @@
         "patches": [
             {
                 "start": 8000000,
-                "signature": "0F 28 D7 8B D7 FF 90 98 00 00 00 90 48 8B 5C 24",
+                "signature": "0F 28 D7 8B D7 FF 90 ?? 00 00 00 90 48 8B 5C 24",
                 "adjust": 5,
                 "data": "90 90 90 90 90 90"
             }
@@ -100,7 +100,7 @@
         "patches": [
             {
                 "start": 7000000,
-                "signature": "40 53 48 83 EC 20 83 79 14 00 48 8B D9 7E 3E 80",
+                "signature": "40 53 48 83 EC 20 83 79 ?? 00 48 8B D9 7E 3E 80",
                 "adjust": 13,
                 "data": "EB"
             }
@@ -320,7 +320,7 @@
         "patches": [
             {
                 "start": 7000000,
-                "signature": "F6 84 C0 74 58 E8 ?? ?? ?? FF 8B 48 14 B8 89 88",
+                "signature": "F6 84 C0 74 58 E8 ?? ?? ?? FF 8B 48 ?? B8 89 88",
                 "adjust": 3,
                 "data": "EB"
             }
