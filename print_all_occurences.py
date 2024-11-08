@@ -2,9 +2,9 @@ from find_sp2x_patches import find
 
 if __name__ == "__main__":
     # DLL to search inside of
-    dll_path = "./dlls/soundvoltex-1022.dll"
+    dll_path = "./dlls/file.dll"
     # Signature to find all occurrences for
-    signature = "E8 ?? ?? 2E 00 85 C0 0F 85 FA 00 00 00"
+    signature = ""
     # Offset to start searching at
     offset = 0
 
