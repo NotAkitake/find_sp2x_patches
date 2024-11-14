@@ -548,17 +548,17 @@ def process_dll_patches(dll_path: Path, game_code: str, dll_name: str, patch_dat
             else:
                 logger.warning(f"[{entry['type']}] '{entry['name']}' not found")
 
-        # Write results to file
-        identifier = get_identifier(game_code, dll_path)
-        output_path = Path(f"./patches/{identifier}.json")
+    # Write results to file
+    identifier = get_identifier(game_code, dll_path)
+    output_path = Path(f"./patches/{identifier}.json")
         
-        try:
-            with open(output_path, "w", encoding='utf-8') as f:
-                json.dump([json.loads(str(p)) for p in patches], f, indent=4)
-                logger.info(f"-> '{output_path}' ({successful}/{total})")
-        except Exception as e:
-            logger.fatal(f"Error writing file: {e}")
-            raise
+    try:
+        with open(output_path, "w", encoding='utf-8') as f:
+            json.dump([json.loads(str(p)) for p in patches], f, indent=4)
+            logger.info(f"-> '{output_path}' ({successful}/{total})")
+    except Exception as e:
+        logger.fatal(f"Error writing file: {e}")
+        raise
 
     return patches
 
