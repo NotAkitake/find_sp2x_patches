@@ -44,7 +44,7 @@ Each file should start with a header object followed by an array of patch object
       - `start`: (Optional) The starting offset to search at, 0 by default (start of file).
       - `signature`: The byte signature to search for, with '??' representing any bytes.
       - `adjust`: (Optional) Adjustment to the found offset.
-      - `data`: The data to write at the patch location.
+      - `data`: The data to write at the patch location. Can be set to "NUL" to set all bytes in the signature to 0.
       - `patchall`: (Optional) If true, apply the patch to all occurrences of the signature.
 
 ###### Example memory patch
