@@ -2,51 +2,57 @@
 
 ## About
 
-- `find_sp2x_patches.py` finds as many Spice2x patches as possible for various game versions.
-- `print_all_occurences.py` is a helper script to quickly test run a signature search for a specific DLL.
+This project includes scripts to find Spice2x patches for various game versions.
 
-**Notes**: 
-1. The provided **signatures will break over time**, I will however do my best to keep updating them as time goes on.
-2. The provided **signatures are built for the bleeding edge of n-0**, don't expect them to work for older content.
-3. Documentation on how to create the signatures files **will come soon**. In the meantime you should be able to figure it out by reading their format.
+- **`find_sp2x_patches.py`**: Finds as many Spice2x patches as possible for various game versions.
+- **`print_all_occurences.py`**: A helper script to quickly test run a signature search for a specific DLL.
+
+### Notes
+
+1. The provided **signatures will break over time**. I will do my best to keep updating them.
+2. The provided **signatures are built for the bleeding edge of n-0**. They may not work for older content.
+3. Documentation on how to create a signature file is provided in [SIGNATURES.md](SIGNATURES.md).
 
 ## Requirements
 
-- **Python 3**  
-- **pip**  
-- `pefile` library, can be installed with `pip install -r requirements.txt`
+- **Python 3**
+- **pip**
+- `pefile` library (install with `pip install -r requirements.txt`)
 
 ## Directories
 
-- `dlls` Contains game's .dll files you want to find patches for.
-- `patches` Is the output folder for spice2x-compatible .json files.
-- `signatures` Contains `<gamecode>-signatures.json` files used by the script to determine patches.
+- **`dlls`**: Contains the game's .dll files you want to find patches for.
+- **`patches`**: The output folder for Spice2x-compatible .json files.
+- **`signatures`**: Contains `<gamecode>-signatures.json` files used by the script to determine patches.
 
 ## Usage
+
+Run the script with the following command:
 
 `python find_sp2x_patches.py [-h] [--game GAME] [--loglevel {DEBUG,INFO,WARNING,ERROR,CRITICAL}]`
 
 ### Arguments
-*All arguments are optional*
-- `-h` Prints out a help message similar to this
-- `--game` Set a specific game to run the script for (example: KFC, default: ALL)
 
-If `--game` is unset or set to `ALL`, the script will run for all signatures files in the `signatures` directory.  
-If `--game` is set, for example `--game LDJ`, the script will run for the matching `LDJ-signatures.json` only.  
-The script will attempt to find patches for all corresponding dll files inside the `dlls` directory.
+_All arguments are optional_
 
-- `--loglevel` Set the console logging level (default: INFO)
+- `-h`: Prints out a help message.
+- `--game`: Specify a game to run the script for (example: KFC, default: ALL).
+- `--loglevel`: Set the console logging level (default: INFO).
 
-Logs are sent to the console AND to a `logs.txt` file.  
-The console will only show INFO and above messages by default, but this argument lets you change that.  
-`logs.txt` logs everything, even DEBUG messages regardless of the set loglevel.  
-`logs.txt` gets overwritten on every run.
+### Logging
 
-Spice2x-compatible patches.json files are outputted to the `patches` directory.
+- Logs are sent to the console and a `logs.txt` file.
+- The console shows INFO and above messages by default, but this can be changed with the `--loglevel` argument.
+- `logs.txt` logs everything, including DEBUG messages, and is overwritten on each run.
+
+### Output
+
+Spice2x-compatible `patches.json` files are outputted to the `patches` directory.
 
 ### Examples
 
-#### File tree
+#### File Tree
+
 > find_sp2x_patches/  
 > ├─ dlls/  
 > ├─── bm2dx31_012-0826.dll  
@@ -56,17 +62,17 @@ Spice2x-compatible patches.json files are outputted to the `patches` directory.
 > ├─ signatures/  
 > ├─── KFC-signatures.json  
 > ├─── LDJ-signatures.json  
-> ├─ find_sp2x_patches.py  
+> ├─ find_sp2x_patches.py
 
 #### Commands and Output
 
-*Note: The patches marked as not found in this first example are expected.  
-The signature file is the same for both LDJ-010 and LDJ-012 dlls, and these are LDJ-010 only patches.*
+_Note: The patches marked as not found in this first example are expected.  
+The signature file is the same for both LDJ-010 and LDJ-012 dlls, and these are LDJ-010 only patches._
 
 **1.**
 
 ```
-> python find_sp2x_patches.py 
+> python find_sp2x_patches.py
 2024-10-27 16:44:39,245 - INFO: [KFC]
 2024-10-27 16:44:39,245 - INFO: Processing 'dlls\soundvoltex-1022.dll'
 2024-10-27 16:44:39,801 - INFO: -> patches\KFC-67108c5c_6d2ec8.json (15/15)
