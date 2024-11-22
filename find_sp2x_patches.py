@@ -417,6 +417,7 @@ class PatchProcessor:
 
             offset = find(spatch_sig, self.dll, subpatch.get("start", 0), subpatch.get("adjust", 0))
             if offset is None:
+                logger.warning(f"[memory] Signature '{spatch_sig}' not found for '{entry.get('name')}'")
                 continue
 
             self.dll.seek(offset)
