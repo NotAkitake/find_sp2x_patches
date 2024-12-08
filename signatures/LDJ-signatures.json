@@ -548,5 +548,71 @@
                 "data": "B0 01"
             }
         ]
+    },
+    {
+        "type": "memory",
+        "name": "Shorten Monitor Check",
+        "description": "Shorten monitor check time by skipping retries. Use at your own risk.",
+        "patches": [
+            {
+                "start": 400000,
+                "signature": "0F 8C A6 00 00 00",
+                "data": "E9 A7 00 00 00 90"
+            },
+            {
+                "start": 400000,
+                "signature": "7D 13 48 8B CF E8 0D 02 00 00",
+                "data": "EB"
+            }
+        ]
+    },
+    {
+        "type": "memory",
+        "name": "Skip Monitor Check",
+        "description": "Useful for tools and network development. Not for playing.",
+        "patches": [
+            {
+                "start": 400000,
+                "signature": "8C BC 01 00 00 E8 3C 74 00 00",
+                "data": "8D"
+            }
+        ]
+    },
+    {
+        "type": "union",
+        "name": "Choose Skip Monitor Check FPS",
+        "description": "",
+        "start": 800000,
+        "signature": "44 8B 91 70 0B 00 00 44 8B CA 4C 8B D9 41 81 C2 67 01 00 00",
+        "patches": [
+            {
+                "name": "Default",
+                "data": "default"
+            },
+            {
+                "name": "60.0000 FPS",
+                "data": "48 B8 00 00 00 00 00 00 4E 40 66 48 0F 6E C0 F2 0F 58 C8 C3"
+            },
+            {
+                "name": "120.0000 FPS",
+                "data": "48 B8 00 00 00 00 00 00 5E 40 66 48 0F 6E C0 F2 0F 58 C8 C3"
+            },
+            {
+                "name": "144.0000 FPS",
+                "data": "48 B8 00 00 00 00 00 00 62 40 66 48 0F 6E C0 F2 0F 58 C8 C3"
+            },
+            {
+                "name": "165.0000 FPS",
+                "data": "48 B8 00 00 00 00 00 A0 64 40 66 48 0F 6E C0 F2 0F 58 C8 C3"
+            },
+            {
+                "name": "240.0000 FPS",
+                "data": "48 B8 00 00 00 00 00 00 6E 40 66 48 0F 6E C0 F2 0F 58 C8 C3"
+            },
+            {
+                "name": "360.0000 FPS",
+                "data": "48 B8 00 00 00 00 00 80 76 40 66 48 0F 6E C0 F2 0F 58 C8 C3"
+            }
+        ]
     }
 ]
