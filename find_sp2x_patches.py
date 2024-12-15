@@ -377,6 +377,32 @@ def ldj_002(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: s
     subpatch = MemorySubPatch(offset, dll_name, data_disabled, data_enabled)
     return MemoryPatch(name, description, game_code, [ subpatch ], caution)
 
+def l44_001(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: str, description: str, caution: str = None) -> MemoryPatch | None:
+    pe = pefile.PE(dll_path, fast_load=True)
+
+    # 1
+    offset = find("75 43 0F 28 85 B0 FD FF FF", dll, 1000000)
+    if offset is None: return None
+    subpatch1 = MemorySubPatch(offset, dll_name, "75", "EB")
+
+    # 2
+    offset = find("0F B7 45 B0 89 04 CD", dll, 1000000)
+    if offset is None: return None
+    subpatch2 = MemorySubPatch(offset, dll_name, "0F B7 45 B0", "31 C0 90 90")
+
+    # 3
+    # FUNCTION OFFSET
+    offset = find("55 8B EC 83 E4 F0 81 EC 98 01 00 00", dll, 1000000)
+    if offset is None: return None
+    dll.seek(offset)
+    offset = find("75 ?? 0F 28 44", dll, offset+1)
+    if offset is None: return None
+    offset = find("75 ?? 0F 28 44", dll, offset+1)
+    if offset is None: return None
+    subpatch3 = MemorySubPatch(offset, dll_name, "75", "EB")
+
+    return MemoryPatch(name, description, game_code, [ subpatch1, subpatch2, subpatch3 ], caution)
+
 class PatchProcessor:
     def __init__(self, dll: BinaryIO, dll_path: str, dll_name: str, game_code: str):
         self.dll = dll
@@ -452,7 +478,8 @@ class PatchProcessor:
             "kfc_001": kfc_001,
             "kfc_002": kfc_002,
             "ldj_001": ldj_001,
-            "ldj_002": ldj_002
+            "ldj_002": ldj_002,
+            "l44_001": l44_001
         }
         
         patch_func = patch_funcs.get(patch_id.lower())

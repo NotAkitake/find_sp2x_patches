@@ -1,0 +1,146 @@
+[
+    {
+        "gameCode": "L44",
+        "dllName": "jubeat.dll",
+        "lastUpdated": "2024-15-12",
+        "source": "https://sp2x.two-torial.xyz/"
+    },
+    {
+        "type": "memory",
+        "name": "Skip Tutorial",
+        "description": "Skips the tutorial.",
+        "patches": [
+            {
+                "start": 800000,
+                "signature": "C8 FF 15 D0 ?? ?? 10 84 C0 0F 85 7F 01 00 00 FF",
+                "adjust": 9,
+                "data": "90 E9"
+            }
+        ]
+    },
+    {
+        "type": "memory",
+        "name": "Skip Online Matching",
+        "description": "Skips online matching when starting a song.",
+        "patches": [
+            {
+                "start": 800000,
+                "signature": "3D ?? ?? ?? ?? 00 0F 84 8E 01 00 00 FF",
+                "adjust": 6,
+                "data": "90 E9"
+            }
+        ]
+    },
+    {
+        "type": "memory",
+        "name": "Skip Category Select",
+        "description": "Skips category select.",
+        "patches": [
+            {
+                "start": 700000,
+                "signature": "0F 68 00 04 84 23 57 FF 15 7C ?? ?? 10 83 C4 08",
+                "adjust": 3,
+                "data": "07"
+            }
+        ]
+    },
+    {
+        "type": "memory",
+        "name": "Song Select Timer Freeze",
+        "description": "Freezes the song select timer.",
+        "patches": [
+            {
+                "start": 700000,
+                "signature": "E8 ?? ?? ?? ?? 84 C0 75 23 38 05 ?? ?? ?? 11 75",
+                "adjust": 7,
+                "data": "EB"
+            }
+        ]
+    },
+    {
+        "type": "memory",
+        "name": "Song Result Timer Freeze",
+        "description": "Freezes the song result timer. It'll still go down to 0 but then stop.",
+        "patches": [
+            {
+                "start": 600000,
+                "signature": "75 ?? 33 C9 E8 ?? ?? ?? ?? B0 01 8B 4D ?? 64 89 0D ?? ?? ?? ?? 59 5E 8B E5",
+                "data": "EB"
+            }
+        ]
+    },
+    {
+        "type": "memory",
+        "name": "Force Unlock All Markers",
+        "description": "Force unlocks all markers.",
+        "caution": "If possible, do this server-side instead of patching.",
+        "patches": [
+            {
+                "start": 1000000,
+                "signature": "10 84 C0 75 2B 0F 28 44 24 40 0F 29 05",
+                "adjust": 3,
+                "data": "EB"
+            },
+            {
+                "start": 1000000,
+                "signature": "C0 75 47 0F 28 85 B0 FD FF FF 0F 29 05",
+                "adjust": 1,
+                "data": "EB"
+            },
+            {
+                "start": 1000000,
+                "signature": "88 41 01 0F B7 45 B0 89 41 04 0F B7",
+                "adjust": 3,
+                "data": "31 C0 90 90"
+            }
+        ]
+    },
+    {
+        "type": "hardcoded",
+        "name": "Force Unlock All Backgrounds",
+        "description": "Force unlocks all backgrounds.",
+        "caution": "If possible, do this server-side instead of patching.",
+        "id": "l44_001"
+    },
+    {
+        "type": "memory",
+        "name": "Force Enable Expert Option",
+        "description": "Force enables the expert option.",
+        "caution": "If possible, do this server-side instead of patching.",
+        "patches": [
+            {
+                "start": 800000,
+                "signature": "11 C3 CC CC CC CC CC CC CC CC CC CC 55 8B EC 51 A1 ?? ?? ?? 13 8B D1",
+                "adjust": 12,
+                "data": "B0 01 C3"
+            }
+        ]
+    },
+    {
+        "type": "union",
+        "name": "Force Default Marker For Guest Play",
+        "description": "Force sets the default marker for guest play.",
+        "caution": "If possible use a network and card-in instead of playing as a guest and using this.",
+        "start": 300000,
+        "signature": "10 A8 01 75 1C 83 C8 01 66 C7 05 ?? ?? ?? 10 00 00 0F 57 C0 A3 ?? ?? ?? 10 66 0F D6 05 ?? ?? ?? 10 B9 B9 0B 00 00 C7 05 ?? ?? ?? 10 31",
+        "adjust": 44,
+        "patches": [
+            {
+                "name": "Default",
+                "data": "default"
+            },
+            {
+                "name": "Festo",
+                "data": "2E"
+            },
+            {
+                "name": "Qubell",
+                "data": "28"
+            },
+            {
+                "name": "Shutter",
+                "data": "04"
+            }
+        ]
+    }
+]
