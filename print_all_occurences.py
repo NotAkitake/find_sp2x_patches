@@ -7,11 +7,13 @@ if __name__ == "__main__":
     signature = ""
     # Offset to start searching at
     offset = 0
+    # Adjustement to add to the output offset
+    adjust = 0
 
     print(dll_path)
     with open(dll_path, 'r+b') as dll:
         while True:
-            offset = find(signature, dll, offset+1)
+            offset = find(signature, dll, offset+1, adjust)
             if offset is None:
                 break
             print(offset)
