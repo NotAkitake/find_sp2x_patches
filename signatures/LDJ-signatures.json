@@ -195,6 +195,20 @@
     },
     {
         "type": "memory",
+        "name": "Disable Category Selection",
+        "description": "Disables the category selection feature that appears in the upper right corner of song select.",
+        "caution": "You will be stuck on what you previously had selected. If you want to see everything, first choose ALL and exit a credit properly, then enable this.",
+        "patches": [
+            {
+                "start": 10000000,
+                "signature": "63 61 74 65 67 6F 72 79 5F 73 65 6C 5F 66 72 61 6D 65",
+                "adjust": 8,
+                "data": "00"
+            }
+        ]
+    },
+    {
+        "type": "memory",
         "name": "Disable News Sound",
         "description": "Disables news sounds.",
         "patches": [
