@@ -62,7 +62,7 @@
         "patches": [
             {
                 "start": 5000000,
-                "signature": "00 E8 ?? ?? 15 00 90 BA 07 00 00 00",
+                "signature": "00 E8 ?? ?? ?? 00 90 BA 07 00 00 00",
                 "adjust": 8,
                 "data": "00"
             }
@@ -258,7 +258,7 @@
         "patches": [
             {
                 "start": 5000000,
-                "signature": "E8 ?? ?? 15 00 90 BA 08 00 00 00 48 8B",
+                "signature": "E8 ?? ?? ?? 00 90 BA 08 00 00 00 48 8B",
                 "adjust": 7,
                 "data": "05"
             }
