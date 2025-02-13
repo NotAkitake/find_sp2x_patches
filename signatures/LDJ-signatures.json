@@ -8,8 +8,8 @@
     {
         "type": "memory",
         "name": "Shared Mode WASAPI",
-        "description": "Allows non-exclusive WASAPI audio.",
-        "caution": "Requires \"Force Audio Output Mode\" to WASAPI. Requires 48000Hz sample rate. Will slightly increase audio latency.",
+        "description": "Allows for non-exclusive WASAPI audio.",
+        "caution": "Requires 48000Hz sample rate. Will slightly increase audio latency. Try combining this with the Low Latency Shared Audio option from spice2x.",
         "patches": [
             {
                 "start": 4000000,
