@@ -537,8 +537,9 @@ class PatchProcessor:
         if not num_patch:
             return None
 
-        required_fields = ["signature", "size", "min", "max"]
-        if not all(num_patch.get(field) for field in required_fields):
+        required = ["signature", "size", "min", "max"]
+        missing = [field for field in required if field not in num_patch or num_patch[field] is None]
+        if missing:
             return None
 
         offset = find(num_patch["signature"], self.dll, 
