@@ -385,6 +385,40 @@
         ]
     },
     {
+        "type": "memory",
+        "name": "Unlock Step Up Level Adjustment",
+        "description": "Unlocks Step Up level adjustment without requiring 8th Dan.",
+        "patches": [
+            {
+                "start": 7000000,
+                "signature": "0F 4D DD FF C7",
+                "data": "8B DD 90"
+            }
+        ]
+    },
+    {
+        "type": "memory",
+        "name": "Unlock Step Up Dan Practice Folders",
+        "description": "Unlocks Step Up dan practice folders.",
+        "patches": [
+            {
+                "start": 7000000,
+                "signature": "0F 84 ?? ?? ?? ?? 85 C0 0F 8E",
+                "data": "90 90 90 90 90 90"
+            },
+            {
+                "start": 7000000,
+                "signature": "0F 8E ?? ?? ?? ?? 66 0F 6F 05 ?? ?? ?? ?? 4C 8D 7C 24",
+                "data": "90 90 90 90 90 90"
+            },
+            {
+                "start": 7000000,
+                "signature": "74 ?? E8 ?? ?? ?? ?? 48 8B D8 E8 ?? ?? ?? ?? 45 33 C0",
+                "data": "90 90"
+            }
+        ]
+    },
+    {
         "type": "union",
         "name": "Force Audio Output Mode",
         "description": "Forces the game to use a specific audio protocol.",
