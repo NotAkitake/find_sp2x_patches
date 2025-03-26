@@ -377,6 +377,7 @@ def ldj_002(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: s
     subpatch = MemorySubPatch(offset, dll_name, data_disabled, data_enabled)
     return MemoryPatch(name, description, game_code, [ subpatch ], caution)
 
+# Force Unlock All Backgrounds
 def l44_001(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: str, description: str, caution: str = None) -> MemoryPatch | None:
     pe = pefile.PE(dll_path, fast_load=True)
 
