@@ -333,5 +333,16 @@
                 "data": "A7 0C"
             }
         ]
+    },
+    {
+        "type": "memory",
+        "name": "Force Enable Headphones",
+        "description": "Assumes headphones are always connected, allowing for volume control. Useful for cabinets.",
+        "patches": [
+            {
+                "signature": "0F 10 06 0F 11 47 ?? 48 8D 4F",
+                "data": "C7 47 60 01 00 00 00"
+            }
+        ]
     }
 ]
