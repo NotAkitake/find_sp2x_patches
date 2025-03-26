@@ -614,7 +614,7 @@ def main():
             continue
 
         logger.info(f"[{game_code}]")
-        for dll_path in Path("dlls").glob(dll_name.replace(".dll", "*.dll")):
+        for dll_path in Path("dlls").rglob(dll_name.replace(".dll", "*.dll")):
             patches = process_dll_patches(dll_path, game_code, dll_name, data)
 
 if __name__ == "__main__":
