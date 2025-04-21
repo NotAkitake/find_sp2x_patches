@@ -244,6 +244,61 @@
     },
     {
         "type": "memory",
+        "name": "Force English Sort Options",
+        "description": "Forces the game to use english sort options within the FX-R menu in song select.",
+        "patches": [
+            {
+                "start": 100000,
+                "signature": "40 57 48 81 EC D0 00 00 00 48 C7 44 24 30 FE FF FF FF 48 89 9C 24 E0 00 00 00 48 8B 05 ?? ?? ?? 00 48 33 C4 48 89 84 24 C0 00 00 00 8B 15 ?? ?? ?? 01 B9",
+                "adjust": 44,
+                "data": "BA 01 00 00 00 90"
+            },
+            {
+                "start": 100000,
+                "signature": "40 57 48 81 EC D0 00 00 00 48 C7 44 24 30 FE FF FF FF 48 89 9C 24 E0 00 00 00 48 8B 05 ?? ?? ?? 00 48 33 C4 48 89 84 24 C0 00 00 00 8B 15 ?? ?? ?? 01 B9",
+                "adjust": 73,
+                "data": "BA 01 00 00 00 90"
+            },
+            {
+                "start": 100000,
+                "signature": "40 57 48 81 EC D0 00 00 00 48 C7 44 24 30 FE FF FF FF 48 89 9C 24 E0 00 00 00 48 8B 05 ?? ?? ?? 00 48 33 C4 48 89 84 24 C0 00 00 00 8B 15 ?? ?? ?? 01 B9",
+                "adjust": 102,
+                "data": "BA 01 00 00 00 90"
+            },
+            {
+                "start": 100000,
+                "signature": "40 57 48 81 EC D0 00 00 00 48 C7 44 24 30 FE FF FF FF 48 89 9C 24 E0 00 00 00 48 8B 05 ?? ?? ?? 00 48 33 C4 48 89 84 24 C0 00 00 00 8B 15 ?? ?? ?? 01 B9",
+                "adjust": 131,
+                "data": "BA 01 00 00 00 90"
+            },
+            {
+                "start": 100000,
+                "signature": "40 57 48 81 EC D0 00 00 00 48 C7 44 24 30 FE FF FF FF 48 89 9C 24 E0 00 00 00 48 8B 05 ?? ?? ?? 00 48 33 C4 48 89 84 24 C0 00 00 00 8B 15 ?? ?? ?? 01 B9",
+                "adjust": 160,
+                "data": "BA 01 00 00 00 90"
+            },
+            {
+                "start": 100000,
+                "signature": "40 57 48 81 EC D0 00 00 00 48 C7 44 24 30 FE FF FF FF 48 89 9C 24 E0 00 00 00 48 8B 05 ?? ?? ?? 00 48 33 C4 48 89 84 24 C0 00 00 00 8B 15 ?? ?? ?? 01 B9",
+                "adjust": 195,
+                "data": "BA 01 00 00 00 90"
+            },
+            {
+                "start": 100000,
+                "signature": "40 57 48 81 EC D0 00 00 00 48 C7 44 24 30 FE FF FF FF 48 89 9C 24 E0 00 00 00 48 8B 05 ?? ?? ?? 00 48 33 C4 48 89 84 24 C0 00 00 00 8B 15 ?? ?? ?? 01 B9",
+                "adjust": 230,
+                "data": "BA 01 00 00 00 90"
+            },
+            {
+                "start": 8000000,
+                "signature": "B9 30 B3 30 A2 30 87 73 06 98",
+                "data": "53 00 63 00 6F 00 72 00 65 00"
+            }
+        ]
+        
+    },
+    {
+        "type": "memory",
         "name": "ASIO 2 Channels Mode",
         "description": "Use 2 channels instead of 8. Useful for some audio cards.",
         "caution": "ONLY for ASIO audio users.",
