@@ -274,13 +274,19 @@ def kfc_001(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: s
 
     # Signature is 'pt_sousa_usr'
     offset = find("70 74 5F 73 6F 75 73 61 5F 75 73 72", dll)
-    if offset is None: return None
+    if offset is None: 
+        logger.error(f"[kfc_001] Step #1 failed for '{name}'")
+        return None
     pt = pe.get_rva_from_offset(offset)
-    offset = find("00 44 89 44 24 28 48 8D 45", dll, 2090000)
-    if offset is None: return None
+    offset = find("00 ?? 89 ?? 24 28 48 8D 45 58 48 89", dll, 2090000)
+    if offset is None: 
+        logger.error(f"[kfc_001] Step #2 failed for '{name}'")
+        return None
     for _ in range(4):
         offset = find("45 33 C0", dll, offset, 6)
-        if offset is None: return None
+        if offset is None: 
+            logger.error(f"[kfc_001] Step #3 failed for '{name}'")
+            return None
 
     data_enabled = struct.pack("<i", pt - pe.get_rva_from_offset(offset) - 4).hex().upper()
     dll.seek(offset)
@@ -295,7 +301,9 @@ def kfc_002(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: s
 
     # Signature for instruction that sets J region
     setter_offset = find("89 05 ?? ?? ?? ?? 48 8B 4C 24 ?? 48 33 CC E8 ?? ?? ?? ?? 48 83 C4 58 C3 B8 02 00 00 00", dll)
-    if setter_offset is None: return None
+    if setter_offset is None: 
+        logger.error(f"[kfc_002] Step #1 failed for '{name}'")
+        return None
 
     # skip two bytes, next 4 bytes (little endian) are rip relative address to our data
     dll.seek(setter_offset + 2)
@@ -306,7 +314,9 @@ def kfc_002(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: s
 
     # Signature for our patch location
     offset = find("E8 ?? ?? ?? ?? 85 C0 0F 85 ?? ?? ?? ?? 8D 48 ?? FF 15 ?? ?? ?? ?? 48 8B C8", dll)
-    if offset is None: return None
+    if offset is None: 
+        logger.error(f"[kfc_002] Step #2 failed for '{name}'")
+        return None
     offset_rva = pe.get_rva_from_offset(offset)
 
     # Need rip to be pointed after the mov instruction, and there is a 5 byte and 6 byte instruction in our patch
@@ -330,7 +340,9 @@ def ldj_001(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: s
 
     # TICKER OFFSET
     ticker_offset = find("48 8D 0D ?? ?? ?? ?? 48 8B D3 FF 15 ?? ?? ?? ?? 48 8B 5C 24 ?? 33 C0 89 3D ?? ?? ?? ?? 48 83 C4 20 5F C3", dll, 8000000, 3)
-    if ticker_offset is None: return None
+    if ticker_offset is None: 
+        logger.error(f"[ldj_001] Step #1 failed for '{name}'")
+        return None
     relative = pe.get_rva_from_offset(ticker_offset)
     dll.seek(ticker_offset)
     ticker_offset = struct.unpack("<i", dll.read(4))[0]
@@ -338,12 +350,16 @@ def ldj_001(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: s
 
     # HIDDEN OFFSET
     hidden_offset = find("00 00 00 20 20 00 00", dll, 10000000, 3)
-    if hidden_offset is None: return None
+    if hidden_offset is None: 
+        logger.error(f"[ldj_001] Step #2 failed for '{name}'")
+        return None
     hidden = pe.get_rva_from_offset(hidden_offset)
 
     # UNION OFFSET
     offset = find("48 83 EC 58 45 84 C0 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8D 05", dll, 4500000, 31)
-    if offset is None: return None
+    if offset is None: 
+        logger.error(f"[ldj_001] Step #3 failed for '{name}'")
+        return None
 
     # UNION OPTIONS
     dll.seek(offset)
@@ -359,7 +375,9 @@ def ldj_002(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: s
 
     # TICKER OFFSET
     ticker_offset = find("48 8D 0D ?? ?? ?? ?? 48 8B D3 FF 15 ?? ?? ?? ?? 48 8B 5C 24 ?? 33 C0 89 3D ?? ?? ?? ?? 48 83 C4 20 5F C3", dll, 8000000, 3)
-    if ticker_offset is None: return None
+    if ticker_offset is None: 
+        logger.error(f"[ldj_002] Step #1 failed for '{name}'")
+        return None
     relative = pe.get_rva_from_offset(ticker_offset)
     dll.seek(ticker_offset)
     ticker_offset = struct.unpack("<i", dll.read(4))[0]
@@ -367,7 +385,9 @@ def ldj_002(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: s
 
     # MEMPATCH OFFSET
     offset = find("00 FF 15 ?? ?? ?? 00 EB 17 4C 8D 05 ?? ?? ?? 00 BA 00 01 00 00 48 8D", dll, 0, 12)
-    if offset is None: return None
+    if offset is None: 
+        logger.error(f"[ldj_002] Step #2 failed for '{name}'")
+        return None
 
     # MEMPATCH OPTIONS
     dll.seek(offset)
@@ -383,23 +403,33 @@ def l44_001(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: s
 
     # 1
     offset = find("75 43 0F 28 85 B0 FD FF FF", dll, 1000000)
-    if offset is None: return None
+    if offset is None: 
+        logger.error(f"[l44_001] Step #1 failed for '{name}'")
+        return None
     subpatch1 = MemorySubPatch(offset, dll_name, "75", "EB")
 
     # 2
     offset = find("0F B7 45 B0 89 04 CD", dll, 1000000)
-    if offset is None: return None
+    if offset is None: 
+        logger.error(f"[l44_001] Step #2 failed for '{name}'")
+        return None
     subpatch2 = MemorySubPatch(offset, dll_name, "0F B7 45 B0", "31 C0 90 90")
 
     # 3
     # FUNCTION OFFSET
     offset = find("55 8B EC 83 E4 F0 81 EC 98 01 00 00", dll, 1000000)
-    if offset is None: return None
+    if offset is None: 
+        logger.error(f"[l44_001] Step #3 failed for '{name}'")
+        return None
     dll.seek(offset)
     offset = find("75 ?? 0F 28 44", dll, offset+1)
-    if offset is None: return None
+    if offset is None: 
+        logger.error(f"[l44_001] Step #4 failed for '{name}'")
+        return None
     offset = find("75 ?? 0F 28 44", dll, offset+1)
-    if offset is None: return None
+    if offset is None: 
+        logger.error(f"[l44_001] Step #5 failed for '{name}'")
+        return None
     subpatch3 = MemorySubPatch(offset, dll_name, "75", "EB")
 
     return MemoryPatch(name, description, game_code, [ subpatch1, subpatch2, subpatch3 ], caution)
