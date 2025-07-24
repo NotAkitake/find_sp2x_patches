@@ -174,7 +174,7 @@
         "patches": [
             {
                 "start": 7000000,
-                "signature": "E8 ?? ?? 12 00 66 0F 6E C0 0F 5B C0 F3 0F 59 05 ?? ?? ?? 00 F3 0F 58 05 ?? ?? ?? 00 F3 0F 2C C0 3B D8 7C",
+                "signature": "E8 ?? ?? ?? 00 66 0F 6E C0 0F 5B C0 F3 0F 59 05 ?? ?? ?? 00 F3 0F 58 05 ?? ?? ?? 00 F3 0F 2C C0 3B D8 7C",
                 "adjust": 34,
                 "data": "90 90"
             }
@@ -232,8 +232,8 @@
             },
             {
                 "start": 7000000,
-                "signature": "F0 10 00 00 48 85 C9 74 07 B2 01 E8",
-                "adjust": 7,
+                "signature": "89 ?? ?? 00 00 48 85 C9 74 07 B2 01 E8",
+                "adjust": 8,
                 "data": "EB"
             }
         ]
@@ -423,7 +423,7 @@
         "name": "Force Audio Output Mode",
         "description": "Forces the game to use a specific audio protocol.",
         "start": 9000000,
-        "signature": "FF 50 08 E8 ?? ?? EC FF 83 78 08 03 74 0D",
+        "signature": "FF 50 08 E8 ?? ?? ?? FF 83 78 08 03 74 0D",
         "adjust": 3,
         "patches": [
             {
@@ -480,7 +480,7 @@
         "patches": [
             {
                 "start": 8000000,
-                "signature": "E8 ?? 74 00 00 83 78 08 03 0F 85 E7 00 00 00",
+                "signature": "E8 ?? ?? 00 00 83 78 08 03 0F 85 ?? ?? 00 00",
                 "adjust": 9,
                 "data": "90 E9"
             }
@@ -494,7 +494,7 @@
         "patches": [
             {
                 "offset": 8000000,
-                "signature": "48 8B CB E8 A8 EC FF FF 84 C0 0F 84 AA 00 00 00",
+                "signature": "48 8B CB E8 ?? EC FF FF 84 C0 0F 84 AA 00 00 00",
                 "adjust": 11,
                 "data": "81"
             }
