@@ -19,4 +19,4 @@ if __name__ == "__main__":
                 offset = find(signature, dll, offset+1, adjust)
                 if offset is None:
                     break
-                print(offset)
+                print(offset, signature.replace(" ", "")[adjust*2:])
