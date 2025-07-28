@@ -482,7 +482,12 @@ class PatchProcessor:
                 spatch_disabled = spatch_sig.replace(" ", "")
             else:
                 spatch_disabled = self.dll.read(round(len(spatch_data.replace(" ", "")) / 2)).hex().upper()
-            
+
+            spatch_data = ''.join(
+                spatch_disabled[i] if char == '?' else char
+                for i, char in enumerate(spatch_data)
+            )
+
             mem_subpatches.append(MemorySubPatch(offset, self.dll_name, spatch_disabled, spatch_data))
 
             if subpatch.get("patchall", False):
@@ -492,6 +497,10 @@ class PatchProcessor:
                         break
                     self.dll.seek(offset)
                     spatch_disabled = self.dll.read(round(len(spatch_data.replace(" ", "")) / 2)).hex().upper()
+                    spatch_data = ''.join(
+                        spatch_disabled[i] if char == '?' else char
+                        for i, char in enumerate(spatch_data)
+                    )
                     mem_subpatches.append(MemorySubPatch(offset, self.dll_name, spatch_disabled, spatch_data))
 
         if len(mem_subpatches) >= len(entry_subpatches):
@@ -555,6 +564,10 @@ class PatchProcessor:
                 self.dll.seek(offset)
                 spatch_data = self.dll.read(option_length).hex().upper()
 
+            spatch_data = ''.join(
+                spatch_disabled[i] if char == '?' else char
+                for i, char in enumerate(spatch_data)
+            )
             union_subpatches.append(UnionSubPatch(spatch_name, offset, self.dll_name, spatch_data))
 
         if len(union_subpatches) == len(entry_subpatches):
