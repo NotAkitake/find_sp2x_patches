@@ -65,7 +65,7 @@
         "patches": [
             {
                 "start": 7000000,
-                "signature": "E8 CB FC FF FF 84 C0 0F 84 F5 00 00 00",
+                "signature": "E8 ?? FC FF FF 84 C0 0F 84 F5 00 00 00",
                 "adjust": 7,
                 "data": "90 E9"
             }
