@@ -1,0 +1,196 @@
+[
+    {
+        "gameCode": "M39",
+        "dllName": "popn22.dll",
+        "lastUpdated": "2024-08-08",
+        "source": "https://sp2x.two-torial.xyz/"
+    },
+    {
+        "name": "E: Drive Fix",
+        "description": "",
+        "type": "memory",
+        "patches": [
+            {
+                "start": 2000000,
+                "signature": "65 3A 2F",
+                "data": "64 65 76",
+                "patchall": true
+            }
+        ]
+    },
+    {
+        "name": "HDMI Audio Fix",
+        "description": "",
+        "type": "memory",
+        "patches": [
+            {
+                "start": 1000000,
+                "signature": "85 C0 75 96",
+                "data": "90 90 90 90"
+            }
+        ]
+    },
+    {
+        "name": "Prevent Windows volume change on boot",
+        "description": "Prevents the game from setting your Windows volume to 100%.",
+        "type": "memory",
+        "patches": [
+            {
+                "start": 1000000,
+                "signature": "E8 ?? ?? ?? 00 81 C4 00 01 00 00 C3 CC CC CC CC CC 83",
+                "adjust": 17,
+                "data": "C3"
+            }
+        ]
+    },
+    {
+        "name": "Boot to Event Mode",
+        "description": "Boots into event mode.",
+        "type": "memory",
+        "patches": [
+            {
+                "start": 1000000,
+                "signature": "C3 CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC 89 08 C3 CC CC CC CC CC CC CC CC CC CC CC CC CC 8B 00 C3 CC",
+                "adjust": 32,
+                "data": "31 C0 40 C3"
+            }
+        ]
+    },
+    {
+        "name": "Remove Timer",
+        "description": "Removes the timer",
+        "type": "memory",
+        "patches": [
+            {
+                "start": 800000,
+                "signature": "00 00 33 F6 89 74 24 14 80 7D 10 00 0F 85 65 05",
+                "adjust": 12,
+                "data": "90 E9"
+            }
+        ]
+    },
+    {
+        "name": "Skip Tutorials",
+        "description": "Skips menu and long note tutorials.",
+        "caution": "May(?) cause issues on online networks, use at your own risk.",
+        "type": "memory",
+        "patches": [
+            {
+                "start": 100000,
+                "signature": "C0 75 5E 6A 00 B8 24 00 00 00 E8 ?? ?? ?? 00 8B 4E 60 83 C4 04 E8 ?? ?? ?? FF 5E C2 04 00 E8 ?? ?? ?? 00 84 C0 74",
+                "adjust": 37,
+                "data": "EB"
+            },
+            {
+                "start": 100000,
+                "signature": "C0 75 5E 6A 00 B8 24 00 00 00 E8 ?? ?? ?? 00 8B 4E 60 83 C4 04 E8 ?? ?? ?? FF 5E C2 04 00 E8 ?? ?? ?? 00 84 C0 74",
+                "adjust": 1,
+                "data": "EB"
+            },
+            {
+                "start": 500000,
+                "signature": "E8 ?? ?? 08 00 E8 ?? ?? 08 00 5F 5E 66 83 F8 01 75",
+                "adjust": 16,
+                "data": "EB"
+            }
+        ]
+    },
+    {
+        "name": "Unlock All Songs and Charts",
+        "description": "Unlocks all songs and charts.",
+        "caution": "BE CAREFUL using this with online networks, you could get banned as they may handle this server-side.",
+        "type": "memory",
+        "patches": [
+            {
+                "start": 1000000,
+                "signature": "C3 85 FF 78 ?? ?? ?? ?? ?? ?? ?? 8B ?? E8 ?? ?? 00 00 84 C0 74",
+                "adjust": 20,
+                "data": "90 90"
+            },
+            {
+                "start": 1000000,
+                "signature": "8B C6 E8 ?? ?? FF FF A9 06 00 00 68 74 ?? 6A 00 0F BF CE E8",
+                "adjust": 12,
+                "data": "EB"
+            }
+        ]
+    },
+    {
+        "name": "Unlock Deco Parts",
+        "description": "Unlocks all deco parts.",
+        "caution": "BE CAREFUL using this with online networks, you could get banned as they may handle this server-side.",
+        "type": "memory",
+        "patches": [
+            {
+                "start": 900000,
+                "signature": "E8 ?? ?? FF FF 83 38 00 75 22",
+                "adjust": 8,
+                "data": "90 90"
+            }
+        ]
+    },
+    {
+        "name": "Unlock Characters",
+        "description": "Unlocks all characters.",
+        "caution": "BE CAREFUL using this with online networks, you could get banned as they may handle this server-side.",
+        "type": "memory",
+        "patches": [
+            {
+                "start": 900000,
+                "signature": "E8 ?? ?? 02 00 5F C3 A9 10 01 00 00 74 0E 8B FA",
+                "adjust": 12,
+                "data": "EB"
+            }
+        ]
+    },
+    {
+        "name": "Replace COLOR CHECK test menu with debug CHARA VIEWER",
+        "description": "Press service button to exit.",
+        "gameCode": "M39",
+        "type": "memory",
+        "patches": [
+            {
+                "start": 2000000,
+                "signature": "43 4F 4C 4F 52 20 43 48 45 43 4B 00 43",
+                "data": "43 48 41 52 41 20 56 49 45 57 45 52 00"
+            },
+            {
+                "start": 100000,
+                "signature": "44 24 08 64 A3 00 00 00 00 68 AC 00 00",
+                "adjust": 10,
+                "data": "B0 34 0C"
+            },
+            {
+                "start": 100000,
+                "signature": "44 24 10 00 00 00 00 85 C0 74 16 50 E8 DC FE FF FF",
+                "adjust": 13,
+                "data": "4C 27 0A 00"
+            }
+        ]
+    },
+    {
+        "name": "Replace SCREEN CHECK test menu with debug MUSIC INFO CHECKER",
+        "description": "Press service button to exit.",
+        "gameCode": "M39",
+        "type": "memory",
+        "patches": [
+            {
+                "start": 2000000,
+                "signature": "53 43 52 45 45 4E 20 43 48 45 43 4B",
+                "data": "4D 55 53 49 43 20 49 4E 46 4F 00 00"
+            },
+            {
+                "start": 100000,
+                "signature": "44 24 08 64 A3 00 00 00 00 68 8C 00 00 00",
+                "adjust": 10,
+                "data": "B0 34 0C"
+            },
+            {
+                "start": 100000,
+                "signature": "44 24 10 00 00 00 00 85 C0 74 16 50 E8 FC FE FF FF",
+                "adjust": 13,
+                "data": "CC 1E 09 00"
+            }
+        ]
+    }
+]
