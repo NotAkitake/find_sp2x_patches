@@ -2,7 +2,7 @@
     {
         "gameCode": "KFC",
         "dllName": "soundvoltex.dll",
-        "lastUpdated": "2025-04-24",
+        "lastUpdated": "2025-08-08",
         "source": "https://sp2x.two-torial.xyz/"
     },
     {
@@ -237,6 +237,19 @@
         ]
     },
     {
+        "type": "memory",
+        "name": "Uncensor All Jackets",
+        "description": "Uncensors all song jackets no matter the region by breaking the path to jacket masks.",
+        "patches": [
+            {
+                "start": 7000000,
+                "signature": "6A 61 63 6B 65 74 5F 6D 61 73 6B",
+                "adjust": 8,
+                "data": "75"
+            }
+        ]
+    },
+    {
         "type": "hardcoded",
         "name": "Fake Region",
         "description": "Forces the game to run as a specific region without altering language, which allows for region-specific content locking. Use Japan for everything to be unlocked.",
@@ -294,8 +307,7 @@
                 "signature": "B9 30 B3 30 A2 30 87 73 06 98",
                 "data": "53 00 63 00 6F 00 72 00 65 00"
             }
-        ]
-        
+        ] 
     },
     {
         "type": "memory",
