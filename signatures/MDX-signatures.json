@@ -38,8 +38,22 @@
     },
     {
         "type": "memory",
-        "name": "Disable Konami Song and Skip Konami Logo",
-        "description": "Disables the Konami jingle and its animation when starting the game.",
+        "name": "Skip 'NOW LOADING ...' on boot",
+        "description": "Skips the 'NOW LOADING ...' text on boot.",
+        "caution": "Skips CheckStepDataActor, so music select screen will display 0 BPM for every song.",
+        "patches": [
+            {
+                "start": 100000,
+                "signature": "E8 ?? ?? ?? 00 5B 85 C0 74 07 E8 ?? ?? 00 00 EB",
+                "adjust": 8,
+                "data": "EB"
+            }
+        ]
+    },
+    {
+        "type": "memory",
+        "name": "Skip Konami jingle and logo",
+        "description": "Skips the Konami jingle and its animation when starting the game.",
         "patches": [
             {
                 "start": 2000000,
@@ -125,5 +139,17 @@
                 "patchall": true
             }
         ]
+    },
+    {
+        "type": "number",
+        "name": "Sound Offset",
+        "description": "Default = 87",
+        "patch": {
+            "signature": "02 00 00 00 BE 57 00 00 00 89 9D",
+            "adjust": 5,
+            "size": 4,
+            "min": 0,
+            "max": 1000
+        }
     }
 ]
