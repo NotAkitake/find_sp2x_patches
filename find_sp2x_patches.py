@@ -1,16 +1,20 @@
 import argparse
-from datetime import datetime, timezone
 import json
 import logging
-from typing import BinaryIO
-from venv import logger
-import pefile
 import re
 import struct
+from datetime import datetime, timezone
 from pathlib import Path
+from typing import BinaryIO
+from venv import logger
+
+import pefile
+
 
 class BasePatch:
-    def __init__(self, name: str, description: str, game_code: str, caution: str = None):
+    def __init__(
+        self, name: str, description: str, game_code: str, caution: str = None
+    ):
         self.name = name
         self.description = description
         self.game_code = game_code
@@ -21,20 +25,24 @@ class BasePatch:
             "name": self.name,
             "description": self.description,
             "caution": self.caution,
-            "gameCode": self.game_code
+            "gameCode": self.game_code,
         }
         return {k: v for k, v in base_dict.items() if v is not None}
 
     def __str__(self):
         return json.dumps(self.to_dict(), indent=4)
-    
+
 
 class MemorySubPatch:
-    def __init__(self, offset: int, dll_name: str, data_disabled: str, data_enabled: str):
+    def __init__(
+        self, offset: int, dll_name: str, data_disabled: str, data_enabled: str
+    ):
         self.offset = offset
         self.dll_name = dll_name
         self.data_disabled = data_disabled.replace(" ", "")
-        self.data_enabled = data_enabled.replace(" ", "").replace("NUL", "0" * len(data_disabled))
+        self.data_enabled = data_enabled.replace(" ", "").replace(
+            "NUL", "0" * len(data_disabled)
+        )
 
     def to_dict(self):
         return {
@@ -45,25 +53,31 @@ class MemorySubPatch:
         }
 
     def __str__(self):
-        return json.dumps(self.to_dict(), indent = 4)
+        return json.dumps(self.to_dict(), indent=4)
 
 
 class MemoryPatch(BasePatch):
-    def __init__(self, name: str, description: str, game_code: str, patches: list[MemorySubPatch], caution: str = None):
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        game_code: str,
+        patches: list[MemorySubPatch],
+        caution: str = None,
+    ):
         super().__init__(name, description, game_code, caution)
         self.patches = patches
 
     def to_dict(self) -> dict:
         patch_dict = super().to_dict()
-        patch_dict.update({
-            "type": "memory",
-            "patches": [p.to_dict() for p in self.patches]
-        })
+        patch_dict.update(
+            {"type": "memory", "patches": [p.to_dict() for p in self.patches]}
+        )
         return patch_dict
 
 
 class UnionSubPatch:
-    def __init__(self, name: str,  offset: int, dll_name: str, data: str):
+    def __init__(self, name: str, offset: int, dll_name: str, data: str):
         self.name = name
         self.offset = offset
         self.dll_name = dll_name
@@ -75,8 +89,8 @@ class UnionSubPatch:
             "patch": {
                 "offset": self.offset,
                 "dllName": self.dll_name,
-                "data": self.data
-            }
+                "data": self.data,
+            },
         }
 
     def __str__(self):
@@ -84,21 +98,38 @@ class UnionSubPatch:
 
 
 class UnionPatch(BasePatch):
-    def __init__(self, name: str, description: str, game_code: str, patches: list[UnionSubPatch], caution: str = None):
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        game_code: str,
+        patches: list[UnionSubPatch],
+        caution: str = None,
+    ):
         super().__init__(name, description, game_code, caution)
         self.patches = patches
 
     def to_dict(self) -> dict:
         patch_dict = super().to_dict()
-        patch_dict.update({
-            "type": "union",
-            "patches": [p.to_dict() for p in self.patches]
-        })
+        patch_dict.update(
+            {"type": "union", "patches": [p.to_dict() for p in self.patches]}
+        )
         return patch_dict
 
 
 class NumberPatch(BasePatch):
-    def __init__(self, name: str, description: str, game_code: str, dll_name: str, offset: int, size: int, i_min: int, i_max: int, caution: str = None):
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        game_code: str,
+        dll_name: str,
+        offset: int,
+        size: int,
+        i_min: int,
+        i_max: int,
+        caution: str = None,
+    ):
         super().__init__(name, description, game_code, caution)
         self.dll_name = dll_name
         self.offset = offset
@@ -108,16 +139,18 @@ class NumberPatch(BasePatch):
 
     def to_dict(self) -> dict:
         patch_dict = super().to_dict()
-        patch_dict.update({
-            "type": "number",
-            "patch": {
-                "dllName": self.dll_name,
-                "offset": self.offset,
-                "size": self.size,
-                "min": self.i_min,
-                "max": self.i_max
+        patch_dict.update(
+            {
+                "type": "number",
+                "patch": {
+                    "dllName": self.dll_name,
+                    "offset": self.offset,
+                    "size": self.size,
+                    "min": self.i_min,
+                    "max": self.i_max,
+                },
             }
-        })
+        )
         return patch_dict
 
 
@@ -129,15 +162,17 @@ def signature_to_regex(signature: str) -> str:
     """
     pattern: list[str] = []
     for byte in signature.split():
-        if byte == '??':
-            pattern.append('.{2}')
+        if byte == "??":
+            pattern.append(".{2}")
         else:
             pattern.append(re.escape(byte))
 
-    return ''.join(pattern)
+    return "".join(pattern)
 
 
-def find(signature: str, dll: BinaryIO, start_offset: int = 0, adjust: int = 0) -> int | None:
+def find(
+    signature: str, dll: BinaryIO, start_offset: int = 0, adjust: int = 0
+) -> int | None:
     """
     Finds a wildcarded bytes signature inside a dll's hex data.
     :param signature: Allows '??' for wildcard bytes, for example: 'E8 45 15 ?? 00 00'.
@@ -171,7 +206,7 @@ def read_dword(dll: BinaryIO, offset: int) -> int:
     :return: struct: Unpacked dword.
     """
     dll.seek(offset)
-    return struct.unpack('<I', dll.read(4))[0]
+    return struct.unpack("<I", dll.read(4))[0]
 
 
 def get_identifier(game_code: str, dll_path: str) -> str:
@@ -182,13 +217,13 @@ def get_identifier(game_code: str, dll_path: str) -> str:
     :return: Identifier for the dll.
     """
     try:
-        with open(dll_path, 'rb') as dll:
+        with open(dll_path, "rb") as dll:
             # Read DOS header to get PE header offset
-            pe_header_offset = read_dword(dll, 0x3c)
+            pe_header_offset = read_dword(dll, 0x3C)
 
             # Check for "PE\0\0" signature
             dll.seek(pe_header_offset)
-            if dll.read(4) != b'PE\0\0':
+            if dll.read(4) != b"PE\0\0":
                 raise ValueError(f"File '{dll}' is not a valid PE file.")
 
             # Read TimeDateStamp
@@ -198,7 +233,7 @@ def get_identifier(game_code: str, dll_path: str) -> str:
             optional_header_offset = pe_header_offset + 24
             entry_point = read_dword(dll, optional_header_offset + 16)
 
-            # Concatenate GameCode, TimeDateStamp, and AddressOfEntryPoint    
+            # Concatenate GameCode, TimeDateStamp, and AddressOfEntryPoint
             identifier = f"{game_code.upper()}-{timestamp:x}_{entry_point:x}"
             return identifier
     except Exception as e:
@@ -213,15 +248,15 @@ def parse_args() -> argparse.Namespace:
     """
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--game',
-        default='ALL',
-        help='(optional) Set a specific game to run the script for (example: KFC, default: ALL)'
+        "--game",
+        default="ALL",
+        help="(optional) Set a specific game to run the script for (example: KFC, default: ALL)",
     )
     parser.add_argument(
-        '--loglevel',
-        default='INFO',
-        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
-        help='(optional) Set the console logging level (default: INFO)'
+        "--loglevel",
+        default="INFO",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+        help="(optional) Set the console logging level (default: INFO)",
     )
     return parser.parse_args()
 
@@ -236,7 +271,9 @@ def set_logger(loglevel: str) -> None:
     logger.setLevel(logging.DEBUG)
 
     # Create a file handler with UTF-8 encoding
-    file_handler: logging.FileHandler = logging.FileHandler("logs.txt", mode="w", encoding="utf-8")
+    file_handler: logging.FileHandler = logging.FileHandler(
+        "logs.txt", mode="w", encoding="utf-8"
+    )
     console_handler: logging.StreamHandler = logging.StreamHandler()
 
     # Set the logging level for handlers
@@ -255,12 +292,14 @@ def set_logger(loglevel: str) -> None:
         }
 
         def format(self, record):
-            log_fmt = self.FORMATS.get(record.levelno, "%(asctime)s - %(levelname)s: %(message)s")
+            log_fmt = self.FORMATS.get(
+                record.levelno, "%(asctime)s - %(levelname)s: %(message)s"
+            )
             formatter = logging.Formatter(log_fmt)
             return formatter.format(record)
 
     # Apply different formatters to the file and console handlers
-    file_formatter = logging.Formatter('%(asctime)s - %(levelname)s: %(message)s')
+    file_formatter = logging.Formatter("%(asctime)s - %(levelname)s: %(message)s")
     file_handler.setFormatter(file_formatter)
     console_handler.setFormatter(CustomFormatter())
 
@@ -268,40 +307,63 @@ def set_logger(loglevel: str) -> None:
     logger.addHandler(file_handler)
     logger.addHandler(console_handler)
 
+
 # HIDE PREMIUM GUIDE BANNER
-def kfc_001(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: str, description: str, caution: str = None) -> MemoryPatch | None:
+def kfc_001(
+    dll: BinaryIO,
+    dll_path: str,
+    dll_name: str,
+    game_code: str,
+    name: str,
+    description: str,
+    caution: str = None,
+) -> MemoryPatch | None:
     pe = pefile.PE(dll_path, fast_load=True)
 
     # Signature is 'pt_sousa_usr'
     offset = find("70 74 5F 73 6F 75 73 61 5F 75 73 72", dll)
-    if offset is None: 
+    if offset is None:
         logger.error(f"[kfc_001] Step #1 failed for '{name}'")
         return None
     pt = pe.get_rva_from_offset(offset)
     offset = find("00 ?? 89 ?? 24 28 48 8D 45 58 48 89", dll, 2090000)
-    if offset is None: 
+    if offset is None:
         logger.error(f"[kfc_001] Step #2 failed for '{name}'")
         return None
     for _ in range(4):
         offset = find("45 33 C0", dll, offset, 6)
-        if offset is None: 
+        if offset is None:
             logger.error(f"[kfc_001] Step #3 failed for '{name}'")
             return None
 
-    data_enabled = struct.pack("<i", pt - pe.get_rva_from_offset(offset) - 4).hex().upper()
+    data_enabled = (
+        struct.pack("<i", pt - pe.get_rva_from_offset(offset) - 4).hex().upper()
+    )
     dll.seek(offset)
     data_disabled = dll.read(round(len(data_enabled) / 2)).hex().upper()
 
     subpatch = MemorySubPatch(offset, dll_name, data_disabled, data_enabled)
-    return MemoryPatch(name, description, game_code, [ subpatch ], caution)
+    return MemoryPatch(name, description, game_code, [subpatch], caution)
+
 
 # FAKE REGION
-def kfc_002(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: str, description: str, caution: str = None) -> UnionPatch | None:
+def kfc_002(
+    dll: BinaryIO,
+    dll_path: str,
+    dll_name: str,
+    game_code: str,
+    name: str,
+    description: str,
+    caution: str = None,
+) -> UnionPatch | None:
     pe = pefile.PE(dll_path, fast_load=True)
 
     # Signature for instruction that sets J region
-    setter_offset = find("89 05 ?? ?? ?? ?? 48 8B 4C 24 ?? 48 33 CC E8 ?? ?? ?? ?? 48 83 C4 58 C3 B8 02 00 00 00", dll)
-    if setter_offset is None: 
+    setter_offset = find(
+        "89 05 ?? ?? ?? ?? 48 8B 4C 24 ?? 48 33 CC E8 ?? ?? ?? ?? 48 83 C4 58 C3 B8 02 00 00 00",
+        dll,
+    )
+    if setter_offset is None:
         logger.error(f"[kfc_002] Step #1 failed for '{name}'")
         return None
 
@@ -313,8 +375,11 @@ def kfc_002(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: s
     region_address = pe.get_rva_from_offset(setter_offset + 6) + region_offset
 
     # Signature for our patch location
-    offset = find("E8 ?? ?? ?? ?? 85 C0 0F 85 ?? ?? ?? ?? 8D 48 ?? FF 15 ?? ?? ?? ?? 48 8B C8", dll)
-    if offset is None: 
+    offset = find(
+        "E8 ?? ?? ?? ?? 85 C0 0F 85 ?? ?? ?? ?? 8D 48 ?? FF 15 ?? ?? ?? ?? 48 8B C8",
+        dll,
+    )
+    if offset is None:
         logger.error(f"[kfc_002] Step #2 failed for '{name}'")
         return None
     offset_rva = pe.get_rva_from_offset(offset)
@@ -325,22 +390,52 @@ def kfc_002(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: s
 
     # UNION OPTIONS
     dll.seek(offset)
-    default  = UnionSubPatch("Default", offset, dll_name, dll.read(13).hex().upper())
-    japan = UnionSubPatch("Japan (J)", offset, dll_name, "B8000000008905" + address_string + "9090")
-    korea = UnionSubPatch("Korea (K)", offset, dll_name, "B8010000008905" + address_string + "9090")
-    asia = UnionSubPatch("Asia (A)", offset, dll_name, "B8020000008905" + address_string + "9090")
-    indonesia = UnionSubPatch("Indonesia (Y)", offset, dll_name, "B8030000008905" + address_string + "9090")
-    america = UnionSubPatch("America (U)", offset, dll_name, "B8040000008905" + address_string + "9090")
+    default = UnionSubPatch("Default", offset, dll_name, dll.read(13).hex().upper())
+    japan = UnionSubPatch(
+        "Japan (J)", offset, dll_name, "B8000000008905" + address_string + "9090"
+    )
+    korea = UnionSubPatch(
+        "Korea (K)", offset, dll_name, "B8010000008905" + address_string + "9090"
+    )
+    asia = UnionSubPatch(
+        "Asia (A)", offset, dll_name, "B8020000008905" + address_string + "9090"
+    )
+    indonesia = UnionSubPatch(
+        "Indonesia (Y)", offset, dll_name, "B8030000008905" + address_string + "9090"
+    )
+    america = UnionSubPatch(
+        "America (U)", offset, dll_name, "B8040000008905" + address_string + "9090"
+    )
 
-    return UnionPatch(name, description, game_code, [ default, japan, korea, asia, indonesia, america ], caution)
+    return UnionPatch(
+        name,
+        description,
+        game_code,
+        [default, japan, korea, asia, indonesia, america],
+        caution,
+    )
+
 
 # REROUTE 'FREE PLAY' TEXT
-def ldj_001(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: str, description: str, caution: str = None) -> UnionPatch | None:
+def ldj_001(
+    dll: BinaryIO,
+    dll_path: str,
+    dll_name: str,
+    game_code: str,
+    name: str,
+    description: str,
+    caution: str = None,
+) -> UnionPatch | None:
     pe = pefile.PE(dll_path, fast_load=True)
 
     # TICKER OFFSET
-    ticker_offset = find("48 8D 0D ?? ?? ?? ?? 48 8B D3 FF 15 ?? ?? ?? ?? 48 8B 5C 24 ?? 33 C0 89 3D ?? ?? ?? ?? 48 83 C4 20 5F C3", dll, 8000000, 3)
-    if ticker_offset is None: 
+    ticker_offset = find(
+        "48 8D 0D ?? ?? ?? ?? 48 8B D3 FF 15 ?? ?? ?? ?? 48 8B 5C 24 ?? 33 C0 89 3D ?? ?? ?? ?? 48 83 C4 20 5F C3",
+        dll,
+        8000000,
+        3,
+    )
+    if ticker_offset is None:
         logger.error(f"[ldj_001] Step #1 failed for '{name}'")
         return None
     relative = pe.get_rva_from_offset(ticker_offset)
@@ -350,32 +445,67 @@ def ldj_001(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: s
 
     # HIDDEN OFFSET
     hidden_offset = find("00 00 00 20 20 00 00", dll, 10000000, 3)
-    if hidden_offset is None: 
+    if hidden_offset is None:
         logger.error(f"[ldj_001] Step #2 failed for '{name}'")
         return None
     hidden = pe.get_rva_from_offset(hidden_offset)
 
     # UNION OFFSET
-    offset = find("48 83 EC 58 45 84 C0 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8D 05", dll, 4500000, 31)
-    if offset is None: 
+    offset = find(
+        "48 83 EC 58 45 84 C0 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8D 05",
+        dll,
+        4500000,
+        31,
+    )
+    if offset is None:
         logger.error(f"[ldj_001] Step #3 failed for '{name}'")
         return None
 
     # UNION OPTIONS
     dll.seek(offset)
     default = UnionSubPatch("Default", offset, dll_name, dll.read(4).hex().upper())
-    ticker_info = UnionSubPatch("Song Title/Ticker information", offset, dll_name, struct.pack("<i", absolute_ticker_offset - pe.get_rva_from_offset(offset)).hex().upper())
-    hide = UnionSubPatch("Hide", offset, dll_name, str(struct.pack("<i", hidden - pe.get_rva_from_offset(offset) - 4).hex().upper()))
+    ticker_info = UnionSubPatch(
+        "Song Title/Ticker information",
+        offset,
+        dll_name,
+        struct.pack("<i", absolute_ticker_offset - pe.get_rva_from_offset(offset))
+        .hex()
+        .upper(),
+    )
+    hide = UnionSubPatch(
+        "Hide",
+        offset,
+        dll_name,
+        str(
+            struct.pack("<i", hidden - pe.get_rva_from_offset(offset) - 4).hex().upper()
+        ),
+    )
 
-    return UnionPatch(name, description, game_code, [ default, ticker_info, hide ], caution)
+    return UnionPatch(
+        name, description, game_code, [default, ticker_info, hide], caution
+    )
+
 
 # Reroute PASELI: ****** Text To Song Title/Ticker Information
-def ldj_002(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: str, description: str, caution: str = None) -> MemoryPatch | None:
+def ldj_002(
+    dll: BinaryIO,
+    dll_path: str,
+    dll_name: str,
+    game_code: str,
+    name: str,
+    description: str,
+    caution: str = None,
+) -> MemoryPatch | None:
     pe = pefile.PE(dll_path, fast_load=True)
 
     # TICKER OFFSET
-    ticker_offset = find("48 8D 0D ?? ?? ?? ?? 48 8B D3 FF 15 ?? ?? ?? ?? 48 8B 5C 24 ?? 33 C0 89 3D ?? ?? ?? ?? 48 83 C4 20 5F C3", dll, 8000000, 3)
-    if ticker_offset is None: 
+    ticker_offset = find(
+        "48 8D 0D ?? ?? ?? ?? 48 8B D3 FF 15 ?? ?? ?? ?? 48 8B 5C 24 ?? 33 C0 89 3D ?? ?? ?? ?? 48 83 C4 20 5F C3",
+        dll,
+        8000000,
+        3,
+    )
+    if ticker_offset is None:
         logger.error(f"[ldj_002] Step #1 failed for '{name}'")
         return None
     relative = pe.get_rva_from_offset(ticker_offset)
@@ -384,33 +514,51 @@ def ldj_002(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: s
     absolute_ticker_offset = relative + ticker_offset
 
     # MEMPATCH OFFSET
-    offset = find("00 FF 15 ?? ?? ?? 00 EB 17 4C 8D 05 ?? ?? ?? 00 BA 00 01 00 00 48 8D", dll, 0, 12)
-    if offset is None: 
+    offset = find(
+        "00 FF 15 ?? ?? ?? 00 EB 17 4C 8D 05 ?? ?? ?? 00 BA 00 01 00 00 48 8D",
+        dll,
+        0,
+        12,
+    )
+    if offset is None:
         logger.error(f"[ldj_002] Step #2 failed for '{name}'")
         return None
 
     # MEMPATCH OPTIONS
     dll.seek(offset)
-    data_enabled = struct.pack("<i", absolute_ticker_offset - pe.get_rva_from_offset(offset)).hex().upper()
+    data_enabled = (
+        struct.pack("<i", absolute_ticker_offset - pe.get_rva_from_offset(offset))
+        .hex()
+        .upper()
+    )
     data_disabled = dll.read(round(len(data_enabled) / 2)).hex().upper()
 
     subpatch = MemorySubPatch(offset, dll_name, data_disabled, data_enabled)
-    return MemoryPatch(name, description, game_code, [ subpatch ], caution)
+    return MemoryPatch(name, description, game_code, [subpatch], caution)
+
 
 # Force Unlock All Backgrounds
-def l44_001(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: str, description: str, caution: str = None) -> MemoryPatch | None:
+def l44_001(
+    dll: BinaryIO,
+    dll_path: str,
+    dll_name: str,
+    game_code: str,
+    name: str,
+    description: str,
+    caution: str = None,
+) -> MemoryPatch | None:
     pe = pefile.PE(dll_path, fast_load=True)
 
     # 1
     offset = find("75 43 0F 28 85 B0 FD FF FF", dll, 1000000)
-    if offset is None: 
+    if offset is None:
         logger.error(f"[l44_001] Step #1 failed for '{name}'")
         return None
     subpatch1 = MemorySubPatch(offset, dll_name, "75", "EB")
 
     # 2
     offset = find("0F B7 45 B0 89 04 CD", dll, 1000000)
-    if offset is None: 
+    if offset is None:
         logger.error(f"[l44_001] Step #2 failed for '{name}'")
         return None
     subpatch2 = MemorySubPatch(offset, dll_name, "0F B7 45 B0", "31 C0 90 90")
@@ -418,21 +566,24 @@ def l44_001(dll: BinaryIO, dll_path: str, dll_name: str, game_code: str, name: s
     # 3
     # FUNCTION OFFSET
     offset = find("55 8B EC 83 E4 F0 81 EC 98 01 00 00", dll, 1000000)
-    if offset is None: 
+    if offset is None:
         logger.error(f"[l44_001] Step #3 failed for '{name}'")
         return None
     dll.seek(offset)
-    offset = find("75 ?? 0F 28 44", dll, offset+1)
-    if offset is None: 
+    offset = find("75 ?? 0F 28 44", dll, offset + 1)
+    if offset is None:
         logger.error(f"[l44_001] Step #4 failed for '{name}'")
         return None
-    offset = find("75 ?? 0F 28 44", dll, offset+1)
-    if offset is None: 
+    offset = find("75 ?? 0F 28 44", dll, offset + 1)
+    if offset is None:
         logger.error(f"[l44_001] Step #5 failed for '{name}'")
         return None
     subpatch3 = MemorySubPatch(offset, dll_name, "75", "EB")
 
-    return MemoryPatch(name, description, game_code, [ subpatch1, subpatch2, subpatch3 ], caution)
+    return MemoryPatch(
+        name, description, game_code, [subpatch1, subpatch2, subpatch3], caution
+    )
+
 
 class PatchProcessor:
     def __init__(self, dll: BinaryIO, dll_path: str, dll_name: str, game_code: str):
@@ -447,65 +598,95 @@ class PatchProcessor:
             "hardcoded": self._process_hardcoded,
             "memory": self._process_memory,
             "union": self._process_union,
-            "number": self._process_number
+            "number": self._process_number,
         }
-        
-        patch_type = entry.get('type')
+
+        patch_type = entry.get("type")
         processor = processors.get(patch_type)
         if not processor:
             logger.error(f"Unknown entry type for '{entry.get('name')}'")
             return None
-            
+
         return processor(entry)
 
     def _process_memory(self, entry: dict) -> MemoryPatch | None:
-        entry_subpatches = entry.get('patches')
+        entry_subpatches = entry.get("patches")
         if not entry_subpatches:
             return None
 
         mem_subpatches: list[MemorySubPatch] = []
-        
+
         for subpatch in entry_subpatches:
             spatch_sig = subpatch.get("signature")
             spatch_data = subpatch.get("data")
             if not spatch_sig or spatch_data is None:
-                logger.error(f"[memory] '{entry.get('name')}' is missing required fields in subpatch")
+                logger.error(
+                    f"[memory] '{entry.get('name')}' is missing required fields in subpatch"
+                )
                 continue
 
-            offset = find(spatch_sig, self.dll, subpatch.get("start", 0), subpatch.get("adjust", 0))
+            offset = find(
+                spatch_sig,
+                self.dll,
+                subpatch.get("start", 0),
+                subpatch.get("adjust", 0),
+            )
             if offset is None:
-                logger.warning(f"[memory] Signature '{spatch_sig}' not found for '{entry.get('name')}'")
+                logger.warning(
+                    f"[memory] Signature '{spatch_sig}' not found for '{entry.get('name')}'"
+                )
                 continue
 
             self.dll.seek(offset)
             if spatch_data == "NUL":
                 spatch_disabled = spatch_sig.replace(" ", "")
             else:
-                spatch_disabled = self.dll.read(round(len(spatch_data.replace(" ", "")) / 2)).hex().upper()
+                spatch_disabled = (
+                    self.dll.read(round(len(spatch_data.replace(" ", "")) / 2))
+                    .hex()
+                    .upper()
+                )
 
-            spatch_data = ''.join(
-                spatch_disabled[i] if char == '?' else char
+            spatch_data = "".join(
+                spatch_disabled[i] if char == "?" else char
                 for i, char in enumerate(spatch_data)
             )
 
-            mem_subpatches.append(MemorySubPatch(offset, self.dll_name, spatch_disabled, spatch_data))
+            mem_subpatches.append(
+                MemorySubPatch(offset, self.dll_name, spatch_disabled, spatch_data)
+            )
 
             if subpatch.get("patchall", False):
                 while True:
-                    offset = find(spatch_sig, self.dll, offset + 1, subpatch.get("adjust", 0))
+                    offset = find(
+                        spatch_sig, self.dll, offset + 1, subpatch.get("adjust", 0)
+                    )
                     if offset is None:
                         break
                     self.dll.seek(offset)
-                    spatch_disabled = self.dll.read(round(len(spatch_data.replace(" ", "")) / 2)).hex().upper()
-                    spatch_data = ''.join(
-                        spatch_disabled[i] if char == '?' else char
+                    spatch_disabled = (
+                        self.dll.read(round(len(spatch_data.replace(" ", "")) / 2))
+                        .hex()
+                        .upper()
+                    )
+                    spatch_data = "".join(
+                        spatch_disabled[i] if char == "?" else char
                         for i, char in enumerate(spatch_data)
                     )
-                    mem_subpatches.append(MemorySubPatch(offset, self.dll_name, spatch_disabled, spatch_data))
+                    mem_subpatches.append(
+                        MemorySubPatch(
+                            offset, self.dll_name, spatch_disabled, spatch_data
+                        )
+                    )
 
         if len(mem_subpatches) >= len(entry_subpatches):
-            return MemoryPatch(entry.get('name'), entry.get('description'), 
-                              self.game_code, mem_subpatches, entry.get('caution'))
+            return MemoryPatch(
+                entry.get("name"),
+                entry.get("description"),
+                self.game_code,
+                mem_subpatches,
+                entry.get("caution"),
+            )
         return None
 
     def _process_hardcoded(self, entry: dict) -> MemoryPatch | UnionPatch | None:
@@ -513,30 +694,41 @@ class PatchProcessor:
         patch_id = entry.get("id")
         if patch_id is None:
             return None
-        
+
         patch_funcs = {
             "kfc_001": kfc_001,
             "kfc_002": kfc_002,
             "ldj_001": ldj_001,
             "ldj_002": ldj_002,
-            "l44_001": l44_001
+            "l44_001": l44_001,
         }
-        
+
         patch_func = patch_funcs.get(patch_id.lower())
         if patch_func is None:
             return None
-        
-        return patch_func(self.dll, self.dll_path, self.dll_name, self.game_code, entry.get('name'), 
-                         entry.get('description'), entry.get('caution'))
+
+        return patch_func(
+            self.dll,
+            self.dll_path,
+            self.dll_name,
+            self.game_code,
+            entry.get("name"),
+            entry.get("description"),
+            entry.get("caution"),
+        )
 
     def _process_union(self, entry: dict) -> UnionPatch | None:
         """Process a union patch entry and return a UnionPatch object if successful."""
-        entry_subpatches = entry.get('patches')
+        entry_subpatches = entry.get("patches")
         if not entry_subpatches:
             return None
 
-        offset = find(entry.get("signature", ""), self.dll, 
-                     entry.get("start", 0), entry.get("adjust", 0))
+        offset = find(
+            entry.get("signature", ""),
+            self.dll,
+            entry.get("start", 0),
+            entry.get("adjust", 0),
+        )
         if offset is None:
             return None
 
@@ -564,46 +756,75 @@ class PatchProcessor:
                 self.dll.seek(offset)
                 spatch_data = self.dll.read(option_length).hex().upper()
 
-            spatch_data = ''.join(
-                spatch_disabled[i] if char == '?' else char
+            spatch_disabled = entry.get("signature").replace(" ", "")
+            spatch_data = "".join(
+                spatch_disabled[i] if char == "?" else char
                 for i, char in enumerate(spatch_data)
             )
-            union_subpatches.append(UnionSubPatch(spatch_name, offset, self.dll_name, spatch_data))
+            union_subpatches.append(
+                UnionSubPatch(spatch_name, offset, self.dll_name, spatch_data)
+            )
 
         if len(union_subpatches) == len(entry_subpatches):
-            return UnionPatch(entry.get('name'), entry.get('description'), 
-                             self.game_code, union_subpatches, entry.get('caution'))
+            return UnionPatch(
+                entry.get("name"),
+                entry.get("description"),
+                self.game_code,
+                union_subpatches,
+                entry.get("caution"),
+            )
         return None
 
     def _process_number(self, entry: dict) -> NumberPatch | None:
         """Process a number patch entry and return a NumberPatch object if successful."""
-        num_patch = entry.get('patch')
+        num_patch = entry.get("patch")
         if not num_patch:
             return None
 
         required = ["signature", "size", "min", "max"]
-        missing = [field for field in required if field not in num_patch or num_patch[field] is None]
+        missing = [
+            field
+            for field in required
+            if field not in num_patch or num_patch[field] is None
+        ]
         if missing:
             return None
 
-        offset = find(num_patch["signature"], self.dll, 
-                     num_patch.get("start", 0), num_patch.get("adjust", 0))
+        offset = find(
+            num_patch["signature"],
+            self.dll,
+            num_patch.get("start", 0),
+            num_patch.get("adjust", 0),
+        )
         if offset is None:
             return None
 
-        return NumberPatch(entry.get('name'), entry.get('description'), self.game_code,
-                          self.dll_name, offset, num_patch["size"], num_patch["min"], 
-                          num_patch["max"], entry.get('caution'))
+        return NumberPatch(
+            entry.get("name"),
+            entry.get("description"),
+            self.game_code,
+            self.dll_name,
+            offset,
+            num_patch["size"],
+            num_patch["min"],
+            num_patch["max"],
+            entry.get("caution"),
+        )
 
-def process_dll_patches(dll_path: Path, game_code: str, dll_name: str, patch_data: list) -> list:
+
+def process_dll_patches(
+    dll_path: Path, game_code: str, dll_name: str, patch_data: list
+) -> list:
     patches = [
         json.dumps(
             {
                 "gameCode": game_code,
-                "version": f"? ({str(dll_path).replace("dlls\\", "")})",
-                "lastUpdated": datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S'),
-                "source": "https://sp2x.two-torial.xyz/"
-            }, indent=4)
+                "version": f"? ({str(dll_path).replace('dlls\\', '')})",
+                "lastUpdated": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
+                "source": "https://sp2x.two-torial.xyz/",
+            },
+            indent=4,
+        )
     ]
     successful = 0
     total = 0
@@ -611,7 +832,7 @@ def process_dll_patches(dll_path: Path, game_code: str, dll_name: str, patch_dat
     with open(dll_path, "r+b") as dll:
         logger.info(f"Processing '{dll.name}'")
         processor = PatchProcessor(dll, dll_path, dll_name, game_code)
-        
+
         for entry in patch_data:
             total += 1
             if patch := processor.process_patch(entry):
@@ -624,9 +845,9 @@ def process_dll_patches(dll_path: Path, game_code: str, dll_name: str, patch_dat
     # Write results to file
     identifier = get_identifier(game_code, dll_path)
     output_path = Path(f"./patches/{identifier}.json")
-        
+
     try:
-        with open(output_path, "w", encoding='utf-8') as f:
+        with open(output_path, "w", encoding="utf-8") as f:
             json.dump([json.loads(str(p)) for p in patches], f, indent=4)
             logger.info(f"-> '{output_path}' ({successful}/{total})")
     except Exception as e:
@@ -634,6 +855,7 @@ def process_dll_patches(dll_path: Path, game_code: str, dll_name: str, patch_dat
         raise
 
     return patches
+
 
 def main():
     args = parse_args()
@@ -645,12 +867,12 @@ def main():
     Path("./dlls").mkdir(parents=False, exist_ok=True)
 
     for signatures_path in Path("signatures").glob("*-signatures.json"):
-        with open(signatures_path, 'r') as f:
+        with open(signatures_path, "r") as f:
             data = json.load(f)
-        
+
         header = data.pop(0)
-        game_code = header['gameCode']
-        dll_name = header['dllName']
+        game_code = header["gameCode"]
+        dll_name = header["dllName"]
 
         if args.game != "ALL" and game_code != args.game.upper():
             logger.debug(f"Skipping '{game_code}'")
@@ -659,6 +881,7 @@ def main():
         logger.info(f"[{game_code}]")
         for dll_path in Path("dlls").rglob(dll_name.replace(".dll", "*.dll")):
             patches = process_dll_patches(dll_path, game_code, dll_name, data)
+
 
 if __name__ == "__main__":
     main()
