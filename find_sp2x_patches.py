@@ -13,7 +13,7 @@ import pefile
 
 class BasePatch:
     def __init__(
-        self, name: str, description: str, game_code: str, caution: str = None
+        self, name: str, description: str, game_code: str, caution: str | None = None
     ):
         self.name = name
         self.description = description
@@ -63,7 +63,7 @@ class MemoryPatch(BasePatch):
         description: str,
         game_code: str,
         patches: list[MemorySubPatch],
-        caution: str = None,
+        caution: str | None = None,
     ):
         super().__init__(name, description, game_code, caution)
         self.patches = patches
@@ -104,7 +104,7 @@ class UnionPatch(BasePatch):
         description: str,
         game_code: str,
         patches: list[UnionSubPatch],
-        caution: str = None,
+        caution: str | None = None,
     ):
         super().__init__(name, description, game_code, caution)
         self.patches = patches
@@ -128,7 +128,7 @@ class NumberPatch(BasePatch):
         size: int,
         i_min: int,
         i_max: int,
-        caution: str = None,
+        caution: str | None = None,
     ):
         super().__init__(name, description, game_code, caution)
         self.dll_name = dll_name
@@ -316,24 +316,24 @@ def kfc_001(
     game_code: str,
     name: str,
     description: str,
-    caution: str = None,
+    caution: str | None = None,
 ) -> MemoryPatch | None:
     pe = pefile.PE(dll_path, fast_load=True)
 
     # Signature is 'pt_sousa_usr'
     offset = find("70 74 5F 73 6F 75 73 61 5F 75 73 72", dll)
     if offset is None:
-        logger.error(f"[kfc_001] Step #1 failed for '{name}'")
+        logger.error("[kfc_001] Step #1 failed for '%s'", {name})
         return None
     pt = pe.get_rva_from_offset(offset)
     offset = find("00 ?? 89 ?? 24 28 48 8D 45 58 48 89", dll, 2090000)
-    if offset is None:
-        logger.error(f"[kfc_001] Step #2 failed for '{name}'")
+    if offset is None or pt is None:
+        logger.error("[kfc_001] Step #2 failed for '%s'", {name})
         return None
     for _ in range(4):
         offset = find("45 33 C0", dll, offset, 6)
         if offset is None:
-            logger.error(f"[kfc_001] Step #3 failed for '{name}'")
+            logger.error("[kfc_001] Step #3 failed for '%s'", {name})
             return None
 
     data_enabled = (
@@ -354,7 +354,7 @@ def kfc_002(
     game_code: str,
     name: str,
     description: str,
-    caution: str = None,
+    caution: str | None = None,
 ) -> UnionPatch | None:
     pe = pefile.PE(dll_path, fast_load=True)
 
@@ -364,7 +364,7 @@ def kfc_002(
         dll,
     )
     if setter_offset is None:
-        logger.error(f"[kfc_002] Step #1 failed for '{name}'")
+        logger.error("[kfc_002] Step #1 failed for '%s'", {name})
         return None
 
     # skip two bytes, next 4 bytes (little endian) are rip relative address to our data
@@ -380,9 +380,12 @@ def kfc_002(
         dll,
     )
     if offset is None:
-        logger.error(f"[kfc_002] Step #2 failed for '{name}'")
+        logger.error("[kfc_002] Step #2 failed for '%s'", {name})
         return None
     offset_rva = pe.get_rva_from_offset(offset)
+    if offset_rva is None:
+        logger.error("[kfc_002] Step #3 failed for '%s'", {name})
+        return None
 
     # Need rip to be pointed after the mov instruction, and there is a 5 byte and 6 byte instruction in our patch
     relative_address = region_address - (offset_rva + 5 + 6)
@@ -424,7 +427,7 @@ def ldj_001(
     game_code: str,
     name: str,
     description: str,
-    caution: str = None,
+    caution: str | None = None,
 ) -> UnionPatch | None:
     pe = pefile.PE(dll_path, fast_load=True)
 
@@ -449,6 +452,9 @@ def ldj_001(
         logger.error(f"[ldj_001] Step #2 failed for '{name}'")
         return None
     hidden = pe.get_rva_from_offset(hidden_offset)
+    if hidden is None:
+        logging.error("[ldj_001] Step #3 failed for '{name}'")
+        return None
 
     # UNION OFFSET
     offset = find(
@@ -458,7 +464,7 @@ def ldj_001(
         31,
     )
     if offset is None:
-        logger.error(f"[ldj_001] Step #3 failed for '{name}'")
+        logger.error(f"[ldj_001] Step #4 failed for '{name}'")
         return None
 
     # UNION OPTIONS
@@ -494,7 +500,7 @@ def ldj_002(
     game_code: str,
     name: str,
     description: str,
-    caution: str = None,
+    caution: str | None = None,
 ) -> MemoryPatch | None:
     pe = pefile.PE(dll_path, fast_load=True)
 
@@ -545,21 +551,19 @@ def l44_001(
     game_code: str,
     name: str,
     description: str,
-    caution: str = None,
+    caution: str | None = None,
 ) -> MemoryPatch | None:
-    pe = pefile.PE(dll_path, fast_load=True)
-
     # 1
     offset = find("75 43 0F 28 85 B0 FD FF FF", dll, 1000000)
     if offset is None:
-        logger.error(f"[l44_001] Step #1 failed for '{name}'")
+        logger.error("[l44_001] Step #1 failed for '%s'", name)
         return None
     subpatch1 = MemorySubPatch(offset, dll_name, "75", "EB")
 
     # 2
     offset = find("0F B7 45 B0 89 04 CD", dll, 1000000)
     if offset is None:
-        logger.error(f"[l44_001] Step #2 failed for '{name}'")
+        logger.error("[l44_001] Step #2 failed for '%s'", name)
         return None
     subpatch2 = MemorySubPatch(offset, dll_name, "0F B7 45 B0", "31 C0 90 90")
 
@@ -567,22 +571,86 @@ def l44_001(
     # FUNCTION OFFSET
     offset = find("55 8B EC 83 E4 F0 81 EC 98 01 00 00", dll, 1000000)
     if offset is None:
-        logger.error(f"[l44_001] Step #3 failed for '{name}'")
+        logger.error("[l44_001] Step #3 failed for '%s'", name)
         return None
     dll.seek(offset)
     offset = find("75 ?? 0F 28 44", dll, offset + 1)
     if offset is None:
-        logger.error(f"[l44_001] Step #4 failed for '{name}'")
+        logger.error("[l44_001] Step #4 failed for '%s'", name)
         return None
     offset = find("75 ?? 0F 28 44", dll, offset + 1)
     if offset is None:
-        logger.error(f"[l44_001] Step #5 failed for '{name}'")
+        logger.error("[l44_001] Step #5 failed for '%s'", name)
         return None
     subpatch3 = MemorySubPatch(offset, dll_name, "75", "EB")
 
     return MemoryPatch(
         name, description, game_code, [subpatch1, subpatch2, subpatch3], caution
     )
+
+
+def mdx_001(
+    dll: BinaryIO,
+    dll_path: str,
+    dll_name: str,
+    game_code: str,
+    name: str,
+    description: str,
+    caution: str | None = None,
+) -> MemoryPatch | None:
+    # 1
+    offset = find("<TBD>", dll, 0)
+    if offset is None:
+        logger.error("[mdx_001] Step #1 failed for '%s'", name)
+        return None
+    subpatch1 = MemorySubPatch(offset, dll_name, "75", "EB")
+
+    # 2
+    offset = find("<TBD>", dll, 0)
+    if offset is None:
+        logger.error("[mdx_001] Step #2 failed for '%s'", name)
+        return None
+    subpatch2 = MemorySubPatch(offset, dll_name, "7505", "9090")
+
+    # return MemoryPatch(
+    #     name, description, game_code, [subpatch1, subpatch2, subpatch3], caution
+    # )
+    #
+    # title = "Center arrows for single player"
+    # find_pattern("7C 24 48 39 02 75 14", 0x20000, 5)
+    # patch(title, "EB")
+    # find_pattern("75 05 B8", pos())
+    # patch(title, "90 90")
+    # x_axis = struct.pack("<i", 495).hex()
+    # # freeze_judge
+    # find_pattern("CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC")
+    # int3_absolute = pos()
+    # int3_rva = pe.get_rva_from_offset(int3_absolute)
+    # find_pattern("83 C4 0C 8D 44 24 1C", pos())
+    # find_pattern("83 C4 0C 8D 4C 24 1C", pos())
+    # freeze = pe.get_rva_from_offset(pos())
+    # patch(title, f"E9 {struct.pack('<i', int3_rva - freeze - 5).hex()} 90 90")
+    # mm.seek(int3_absolute)
+    # patch(
+    #     title,
+    #     f"83 C4 0C 8D 4C 24 1C 36 C7 01 {x_axis} E9 {struct.pack('<i', freeze - int3_rva - 12).hex()}",
+    # )
+    # # arrow
+    # find_pattern(
+    #     "CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC",
+    #     int3_absolute + 20,
+    # )
+    # int3_absolute = pos()
+    # int3_rva = pe.get_rva_from_offset(int3_absolute)
+    # for search in range(6):
+    #     find_pattern("83 C4 0C 8D 44 24 1C", pos() + 1)
+    # arrow = pe.get_rva_from_offset(pos())
+    # patch(title, f"E9 {struct.pack('<i', int3_rva - arrow - 5).hex()} 90 90")
+    # mm.seek(int3_absolute)
+    # patch(
+    #     title,
+    #     f"83 C4 0C 8D 44 24 1C 36 C7 00 {x_axis} E9 {struct.pack('<i', arrow - int3_rva - 12).hex()}",
+    # )
 
 
 class PatchProcessor:
@@ -602,6 +670,8 @@ class PatchProcessor:
         }
 
         patch_type = entry.get("type")
+        if patch_type is None:
+            return None
         processor = processors.get(patch_type)
         if not processor:
             logger.error(f"Unknown entry type for '{entry.get('name')}'")
@@ -681,11 +751,11 @@ class PatchProcessor:
 
         if len(mem_subpatches) >= len(entry_subpatches):
             return MemoryPatch(
-                entry.get("name"),
-                entry.get("description"),
+                entry.get("name", ""),
+                entry.get("description", ""),
                 self.game_code,
                 mem_subpatches,
-                entry.get("caution"),
+                entry.get("caution", ""),
             )
         return None
 
@@ -701,6 +771,7 @@ class PatchProcessor:
             "ldj_001": ldj_001,
             "ldj_002": ldj_002,
             "l44_001": l44_001,
+            "mdx_001": mdx_001,
         }
 
         patch_func = patch_funcs.get(patch_id.lower())
@@ -733,7 +804,7 @@ class PatchProcessor:
             return None
 
         # Validate patch lengths
-        option_length = None
+        option_length = 0
         for subpatch in entry_subpatches:
             spatch_data = subpatch.get("data", "")
             if spatch_data.lower() == "default":
@@ -756,7 +827,7 @@ class PatchProcessor:
                 self.dll.seek(offset)
                 spatch_data = self.dll.read(option_length).hex().upper()
 
-            spatch_disabled = entry.get("signature").replace(" ", "")
+            spatch_disabled = entry.get("signature", "").replace(" ", "")
             spatch_data = "".join(
                 spatch_disabled[i] if char == "?" else char
                 for i, char in enumerate(spatch_data)
@@ -767,8 +838,8 @@ class PatchProcessor:
 
         if len(union_subpatches) == len(entry_subpatches):
             return UnionPatch(
-                entry.get("name"),
-                entry.get("description"),
+                entry.get("name", ""),
+                entry.get("description", ""),
                 self.game_code,
                 union_subpatches,
                 entry.get("caution"),
@@ -800,8 +871,8 @@ class PatchProcessor:
             return None
 
         return NumberPatch(
-            entry.get("name"),
-            entry.get("description"),
+            entry.get("name", ""),
+            entry.get("description", ""),
             self.game_code,
             self.dll_name,
             offset,
@@ -813,7 +884,7 @@ class PatchProcessor:
 
 
 def process_dll_patches(
-    dll_path: Path, game_code: str, dll_name: str, patch_data: list
+    dll_path: str, game_code: str, dll_name: str, patch_data: list
 ) -> list:
     patches = [
         json.dumps(
@@ -836,7 +907,7 @@ def process_dll_patches(
         for entry in patch_data:
             total += 1
             if patch := processor.process_patch(entry):
-                patches.append(patch)
+                patches.append(str(patch))
                 successful += 1
                 logger.debug(f"[{entry['type']}] '{entry['name']}' found")
             else:
@@ -860,7 +931,7 @@ def process_dll_patches(
 def main():
     args = parse_args()
     loglevel = getattr(logging, args.loglevel.upper(), logging.INFO)
-    set_logger(loglevel)
+    set_logger(str(loglevel))
 
     Path("./patches").mkdir(parents=False, exist_ok=True)
     Path("./signatures").mkdir(parents=False, exist_ok=True)
@@ -880,7 +951,7 @@ def main():
 
         logger.info(f"[{game_code}]")
         for dll_path in Path("dlls").rglob(dll_name.replace(".dll", "*.dll")):
-            patches = process_dll_patches(dll_path, game_code, dll_name, data)
+            _ = process_dll_patches(str(dll_path), game_code, dll_name, data)
 
 
 if __name__ == "__main__":
