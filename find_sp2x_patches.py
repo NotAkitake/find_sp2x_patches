@@ -589,70 +589,6 @@ def l44_001(
     )
 
 
-def mdx_001(
-    dll: BinaryIO,
-    dll_path: str,
-    dll_name: str,
-    game_code: str,
-    name: str,
-    description: str,
-    caution: str | None = None,
-) -> MemoryPatch | None:
-    # 1
-    offset = find("<TBD>", dll, 0)
-    if offset is None:
-        logger.error("[mdx_001] Step #1 failed for '%s'", name)
-        return None
-    subpatch1 = MemorySubPatch(offset, dll_name, "75", "EB")
-
-    # 2
-    offset = find("<TBD>", dll, 0)
-    if offset is None:
-        logger.error("[mdx_001] Step #2 failed for '%s'", name)
-        return None
-    subpatch2 = MemorySubPatch(offset, dll_name, "7505", "9090")
-
-    # return MemoryPatch(
-    #     name, description, game_code, [subpatch1, subpatch2, subpatch3], caution
-    # )
-    #
-    # title = "Center arrows for single player"
-    # find_pattern("7C 24 48 39 02 75 14", 0x20000, 5)
-    # patch(title, "EB")
-    # find_pattern("75 05 B8", pos())
-    # patch(title, "90 90")
-    # x_axis = struct.pack("<i", 495).hex()
-    # # freeze_judge
-    # find_pattern("CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC")
-    # int3_absolute = pos()
-    # int3_rva = pe.get_rva_from_offset(int3_absolute)
-    # find_pattern("83 C4 0C 8D 44 24 1C", pos())
-    # find_pattern("83 C4 0C 8D 4C 24 1C", pos())
-    # freeze = pe.get_rva_from_offset(pos())
-    # patch(title, f"E9 {struct.pack('<i', int3_rva - freeze - 5).hex()} 90 90")
-    # mm.seek(int3_absolute)
-    # patch(
-    #     title,
-    #     f"83 C4 0C 8D 4C 24 1C 36 C7 01 {x_axis} E9 {struct.pack('<i', freeze - int3_rva - 12).hex()}",
-    # )
-    # # arrow
-    # find_pattern(
-    #     "CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC",
-    #     int3_absolute + 20,
-    # )
-    # int3_absolute = pos()
-    # int3_rva = pe.get_rva_from_offset(int3_absolute)
-    # for search in range(6):
-    #     find_pattern("83 C4 0C 8D 44 24 1C", pos() + 1)
-    # arrow = pe.get_rva_from_offset(pos())
-    # patch(title, f"E9 {struct.pack('<i', int3_rva - arrow - 5).hex()} 90 90")
-    # mm.seek(int3_absolute)
-    # patch(
-    #     title,
-    #     f"83 C4 0C 8D 44 24 1C 36 C7 00 {x_axis} E9 {struct.pack('<i', arrow - int3_rva - 12).hex()}",
-    # )
-
-
 class PatchProcessor:
     def __init__(self, dll: BinaryIO, dll_path: str, dll_name: str, game_code: str):
         self.dll = dll
@@ -771,7 +707,6 @@ class PatchProcessor:
             "ldj_001": ldj_001,
             "ldj_002": ldj_002,
             "l44_001": l44_001,
-            "mdx_001": mdx_001,
         }
 
         patch_func = patch_funcs.get(patch_id.lower())
