@@ -261,7 +261,7 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def set_logger(loglevel: str) -> None:
+def set_logger(loglevel: int) -> None:
     """
     Sets logger custom formatting and loglevel.
     :param loglevel: Loglevel applied to the console only (DEBUG, INFO, WARNING, ERROR, CRITICAL).
@@ -931,7 +931,7 @@ def process_dll_patches(
 def main():
     args = parse_args()
     loglevel = getattr(logging, args.loglevel.upper(), logging.INFO)
-    set_logger(str(loglevel))
+    set_logger(loglevel)
 
     Path("./patches").mkdir(parents=False, exist_ok=True)
     Path("./signatures").mkdir(parents=False, exist_ok=True)
