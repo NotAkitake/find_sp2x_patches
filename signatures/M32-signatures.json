@@ -1,0 +1,199 @@
+[
+  {
+    "gameCode": "M32",
+    "dllName": "game.dll",
+    "lastUpdated": "2025-09-17",
+    "source": "https://sp2x.two-torial.xyz/"
+  },
+  {
+    "type": "memory",
+    "name": "Timer Freeze",
+    "description": "",
+    "patches": [
+      {
+        "start": 900000,
+        "signature": "84 C0 0F 85 3E 01 00",
+        "adjust": 2,
+        "data": "90E9"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Premium Timer Freeze",
+    "description": "",
+    "caution": "Scores will only save on exiting Premium Time, and only up to 20 songs.",
+    "patches": [
+      {
+        "start": 1000000,
+        "signature": "75 0C 85 C9 7E ?? FF C9 89 0D",
+        "adjust": 6,
+        "data": "9090"
+      }
+    ]
+  },
+  {
+    "type": "union",
+    "name": "Premium Time 15",
+    "description": "",
+    "caution": "Scores will only save on exiting Premium Time, and only up to 20 songs. Recommended to keep this under 45 minutes.",
+    "start": 100000,
+    "signature": "F0 D2 00 00 FF 15",
+    "patches": [
+      {
+        "name": "00:00",
+        "data": "06000000"
+      },
+      {
+        "name": "00:01",
+        "data": "3C000000"
+      },
+      {
+        "name": "04:20",
+        "data": "F03C0000"
+      },
+      {
+        "name": "13:37",
+        "data": "7CBF0000"
+      },
+      {
+        "name": "57:30",
+        "data": "98280300"
+      },
+      {
+        "name": "69:00",
+        "data": "50CA0300"
+      },
+      {
+        "name": "10 Minutes",
+        "data": "A08C0000"
+      },
+      {
+        "name": "15 Minutes",
+        "data": "default"
+      },
+      {
+        "name": "20 Minutes",
+        "data": "40190100"
+      },
+      {
+        "name": "30 Minutes",
+        "data": "E0A50100"
+      },
+      {
+        "name": "45 Minutes",
+        "data": "D0780200"
+      },
+      {
+        "name": "60 Minutes",
+        "data": "C04B0300"
+      },
+      {
+        "name": "90 Minutes",
+        "data": "A0F10400"
+      }
+    ]
+  },
+  {
+    "type": "union",
+    "name": "Premium Time 10",
+    "description": "",
+    "caution": "Scores will only save on exiting Premium Time, and only up to 20 songs. Recommended to keep this under 45 minutes.",
+    "start": 100000,
+    "signature": "00 A0 8C 00 00",
+    "adjust": 1,
+    "patches": [
+      {
+        "name": "00:00",
+        "data": "06000000"
+      },
+      {
+        "name": "00:01",
+        "data": "3C000000"
+      },
+      {
+        "name": "04:20",
+        "data": "F03C0000"
+      },
+      {
+        "name": "13:37",
+        "data": "7CBF0000"
+      },
+      {
+        "name": "57:30",
+        "data": "98280300"
+      },
+      {
+        "name": "69:00",
+        "data": "50CA0300"
+      },
+      {
+        "name": "10 Minutes",
+        "data": "default"
+      },
+      {
+        "name": "15 Minutes",
+        "data": "F0D20000"
+      },
+      {
+        "name": "20 Minutes",
+        "data": "40190100"
+      },
+      {
+        "name": "30 Minutes",
+        "data": "E0A50100"
+      },
+      {
+        "name": "45 Minutes",
+        "data": "D0780200"
+      },
+      {
+        "name": "60 Minutes",
+        "data": "C04B0300"
+      },
+      {
+        "name": "90 Minutes",
+        "data": "A0F10400"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Skip Tutorial",
+    "description": "",
+    "patches": [
+      {
+        "start": 900000,
+        "signature": "30 83 F8 0D 0F 87",
+        "adjust": 4,
+        "data": "90E9"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Enable Long Music",
+    "description": "",
+    "patches": [
+      {
+        "start": 1000000,
+        "signature": "CC CC 80 79 30 00 74",
+        "adjust": 6,
+        "data": "EB"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Skip 'NOW DATA INITIALIZING'",
+    "description": "",
+    "caution": "Useful for testing only",
+    "patches": [
+      {
+        "start": 200000,
+        "signature": "0F 84 74 01 00 00",
+        "data": "909090909090"
+      }
+    ]
+  }
+]
