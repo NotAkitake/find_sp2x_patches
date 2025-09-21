@@ -1,686 +1,686 @@
 [
-    {
-        "gameCode": "LDJ",
-        "dllName": "bm2dx.dll",
-        "lastUpdated": "2025-08-01",
-        "source": "https://sp2x.two-torial.xyz/"
-    },
-    {
-        "type": "memory",
-        "name": "Shared Mode WASAPI",
-        "description": "Allows for non-exclusive WASAPI audio.",
-        "caution": "Requires 48000Hz sample rate. Will slightly increase audio latency. Try combining this with the Low Latency Shared Audio option from spice2x.",
-        "patches": [
-            {
-                "start": 4000000,
-                "signature": "00 48 33 C4 48 89 45 48 49 8B D8 44 8B F2 48 8B",
-                "adjust": 11,
-                "data": "4D 31 F6"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Increase Game Volume",
-        "description": "Increases game volume as it can be a bit low on home setups by default.",
-        "patches": [
-            {
-                "start": 8000000,
-                "signature": "0F 28 D7 8B D7 FF 90 ?? 00 00 00 90 48 8B 5C 24",
-                "adjust": 5,
-                "data": "90 90 90 90 90 90"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Force TDJ Mode",
-        "description": "Forces the game to run as TDJ (010, 120Hz) instead of LDJ (012, 60Hz).",
-        "patches": [
-            {
-                "start": 8000000,
-                "signature": "C7 06 02 00 00 00 45 89 27 48 85 FF 74 54 48 8B",
-                "adjust": 2,
-                "data": "03"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Force LDJ Mode",
-        "description": "Forces the game to run as LDJ (012, 60Hz) instead of TDJ (010, 120Hz).",
-        "patches": [
-            {
-                "offset": 9000000,
-                "signature": "E8 AD F8 FF FF 90 41 C7 06 03 00 00 00",
-                "adjust": 9,
-                "data": "02"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Standard/Menu Timer Freeze",
-        "description": "Freezes all non-premium area timers.",
-        "patches": [
-            {
-                "start": 7000000,
-                "signature": "E8 ?? FC FF FF 84 C0 0F 84 F5 00 00 00",
-                "adjust": 7,
-                "data": "90 E9"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Premium Free Timer Freeze",
-        "description": "Freezes all premium area timers.",
-        "patches": [
-            {
-                "start": 7000000,
-                "signature": "40 53 48 83 EC 20 83 79 ?? 00 48 8B D9 7E 3E 80",
-                "adjust": 13,
-                "data": "EB"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Video Purchase Timer Freeze",
-        "description": "Freezes the subscreen countdown on the transition from result to music select.",
-        "caution": "Only useful with a TDJ (010) dll.",
-        "patches": [
-            {
-                "start": 8000000,
-                "signature": "E8 1E F5 FF FF 84 C0 74 35 8B 47 64 85 C0 7E 2E FF C8",
-                "adjust": 16,
-                "data": "90 90"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "CS-style Song Start Delay",
-        "description": "Lets you pause at the start of a song by holding Start.",
-        "patches": [
-            {
-                "start": 7000000,
-                "signature": "7D ?? 40 84 F6 74 09 C7 47 14 00 00 00 00",
-                "data": "90 90"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "All Notes Preview 12s",
-        "description": "Always shows note previews at the start of a song, no matter the level.",
-        "patches": [
-            {
-                "start": 6000000,
-                "signature": "B9 0C 00 00 00 41 BC 05 00 00 00 84 C0 44 0F 45",
-                "adjust": 7,
-                "data": "0C",
-                "patchall": true
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Unscramble Touch Screen Keypad in TDJ",
-        "description": "Unscrambles the touchscreen's Keypad in TDJ.",
-        "patches": [
-            {
-                "start": 8000000,
-                "signature": "4D 03 C8 49 F7 F1 89 53",
-                "data": "BA 0C 00 00 00 90"
-            },
-            {
-                "start": 8000000,
-                "signature": "33 D2 48 F7 F3 48 8B 9C 24",
-                "data": "BA 0C 00 00 00"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Skip Decide Screen",
-        "description": "Skips the splash animation that appears upon starting a song.",
-        "patches": [
-            {
-                "start": 5000000,
-                "signature": "48 8B C4 55 41 56 41 57 48 8D 68 ?? 48 81 EC 00 01 00 00",
-                "data": "48 8B C1 C3"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Quick Retry",
-        "description": "Makes retrying a song quicker.",
-        "patches": [
-            {
-                "start": 7000000,
-                "signature": "CC CC CC CC CC CC CC CC 40 53 48 83 EC 20 8B CA 8B DA E8 ?? ?? ?? 00 84 C0 74 0C 8B CB 48 83 C4 20 5B E9 ?? ?? ?? FF 32 C0 48 83 C4 20 5B C3",
-                "adjust": 8,
-                "data": "B0 01 C3 90 90 90"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Quicker Quick Retry",
-        "description": "Makes retrying a song even quicker. Shortens the duration of the 'Stage Failed' animation.",
-        "caution": "To be used along with \"Quick Retry\".",
-        "patches": [
-            {
-                "start": 7000000,
-                "signature": "7C 79 E8 ?? ?? 02 00 48 8D 0D B2 F2 FF FF 4C 8B",
-                "data": "90 90"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Mute Navigator Voices",
-        "description": "Mutes voices you hear when carding in/out of the game.",
-        "patches": [
-            {
-                "start": 8000000,
-                "signature": "E8 F3 FE FF FF 84 C0 75 0B 8B CB E8 78 FE FF FF",
-                "adjust": 7,
-                "data": "90 90"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Disable Category Selection",
-        "description": "Disables the category selection feature that appears in the upper right corner of song select.",
-        "caution": "You will be stuck on what you previously had selected. If you want to see everything, first choose ALL and exit a credit properly, then enable this.",
-        "patches": [
-            {
-                "start": 10000000,
-                "signature": "63 61 74 65 67 6F 72 79 5F 73 65 6C 5F 66 72 61 6D 65",
-                "adjust": 8,
-                "data": "00"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Disable News Sound",
-        "description": "Disables news sounds.",
-        "patches": [
-            {
-                "start": 10000000,
-                "signature": "73 79 73 73 64 5F 6E 65 77 73 5F 63 75 74 69 6E 5F 73 65",
-                "data": "73 79 73 73 64 5F 64 75 6D 6D 79 00 00 00 00 00 00 00 00"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Disable Background Movies",
-        "description": "Disables background movies from playing during gameplay.",
-        "patches": [
-            {
-                "start": 7000000,
-                "signature": "F8 0F B6 F2 48 8B D9 48 85 C9 0F 84 9E 00 00 00",
-                "adjust": 10,
-                "data": "31 C0 90 90 90 90"
-            },
-            {
-                "start": 7000000,
-                "signature": "89 ?? ?? 00 00 48 85 C9 74 07 B2 01 E8",
-                "adjust": 8,
-                "data": "EB"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Disable Recording Lock",
-        "description": "Allows ALL songs to be recorded in-game.",
-        "caution": "Only useful with a TDJ (010) dll.",
-        "patches": [
-            {
-                "start": 7000000,
-                "signature": "E8 ?? ?? ?? FF 84 C0 74 17 40 84 FF 74 12 48 8B",
-                "adjust": 9,
-                "data": "90 90 90"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Faster Video Uploads",
-        "description": "Makes video upload put request 1000 times faster in theory, by expanding InternetWriteFile() body chunk size to 0x3200000.",
-        "caution": "Only useful with a TDJ (010) dll.",
-        "patches": [
-            {
-                "start": 9000000,
-                "signature": "00 48 85 C9 0F 84 8B 00 00 00 41 BE 00 32 00 00",
-                "adjust": 12,
-                "data": "00 00 20 03"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Force 120 FPS Recording Output .mp4",
-        "description": "Forces the game to record at 120 FPS.",
-        "caution": "Only useful with a TDJ (010) dll. Also make sure your hardware and network support this!",
-        "patches": [
-            {
-                "start": 9000000,
-                "signature": "80 07 00 00 38 04 00 00 3C 00 00 00 01 00 00 00",
-                "adjust": 8,
-                "data": "78"
-            }
-        ]
-    },
-    {
-        "type": "hardcoded",
-        "name": "Reroute FREE PLAY Text",
-        "description": "Reroute FREE PLAY Text to show something different.",
-        "caution": "Requires FREE PLAY enabled in the test menu.",
-        "id": "ldj_001"
-    },
-    {
-        "type": "hardcoded",
-        "name": "Reroute PASELI: ****** Text To Song Title/Ticker Information",
-        "description": "Reroute PASELI: ****** Text to Song Title/Ticker Information.",
-        "id": "ldj_002"
-    },
-    {
-        "type": "memory",
-        "name": "Hide All Bottom Text",
-        "description": "Hides all text typically found in the bottom corners of the screen such as \"PASELI\" or \"FREE PLAY\".",
-        "patches": [
-            {
-                "start": 10000000,
-                "signature": "43 52 45 44 49 54 3A 20 25 64 20 43 4F 49 4E 3A 20 25 64 20 2F 20 25 64 00 00 00 00 00 00 00 00 43 52 45 44 49 54 3A 20 25 64 00 00 00 00 00 00 50 41 53 45 4C 49 3A 20 4E 4F 54 20 41 56 41 49 4C 41 42 4C 45 00 00 00 45 58 54 52 41 20 50 41 53 45 4C 49 3A 20 25 64 00 00 00 00 00 00 00 00 45 58 54 52 41 20 50 41 53 45 4C 49 3A 20 25 73 00 00 00 00 00 00 00 00 50 41 53 45 4C 49 3A 20 25 64 00 00 00 00 00 00 50 41 53 45 4C 49 3A 20 25 73 00 00 00 00 00 00 50 41 53 45 4C 49 3A 20 2A 2A 2A 2A 2A 2A 00 00 20 2B 20 25 64 00 00 00 20 2B 20 25 73 00 00 00 50 41 53 45 4C 49 3A 20 4E 4F 20 41 43 43 4F 55 4E 54 00 00 00 00 00 00 49 4E 53 45 52 54 20 43 4F 49 4E 5B 53 5D 00 00 50 41 53 45 4C 49 3A 20 2A 2A 2A 2A 2A 2A 20 2B 20 30 30 30 30 30 00 00 43 52 45 44 49 54 3A 20 39 39 20 43 4F 49 4E 3A 20 39 39 20 2F 20 31 30",
-                "data": "NUL"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Hide Time Limit Display on Results Screen",
-        "description": "Hides the time limit display on results screen.",
-        "patches": [
-            {
-                "start": 7000000,
-                "signature": "F6 84 C0 74 58 E8 ?? ?? ?? FF 8B 48 ?? B8 89 88",
-                "adjust": 3,
-                "data": "EB"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Hide Background Color Banners on Song List",
-        "description": "Hides all \"listb_\" elements.",
-        "patches": [
-            {
-                "signature": "6C 69 73 74 62 5F",
-                "adjust": 5,
-                "data": "00",
-                "patchall": true
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Hide Measure Lines",
-        "description": "Hides measure lines during gameplay.",
-        "patches": [
-            {
-                "start": 7000000,
-                "signature": "E8 ?? ?? ?? 00 EB 3C 83 F8 04 75 37 81 FE D3 02",
-                "adjust": 10,
-                "data": "EB"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Hide Judge Combo Count",
-        "description": "Hides the Combo Count during gameplay.",
-        "patches": [
-            {
-                "start": 8000000,
-                "signature": "8B 91 F0 24 00 00 FF C0 89 81 F4 24 00 00",
-                "adjust": 6,
-                "data": "31 C0"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Dark Gameplay Mode",
-        "description": "Makes a lot of gameplay UI elements completely black.",
-        "patches": [
-            {
-                "start": 7000000,
-                "signature": "E8 ?? ?? ?? 00 84 C0 74 4C 49 8B 4E 10 48",
-                "adjust": 5,
-                "data": "90 90"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Unlock All Songs and Charts",
-        "description": "Unlocks all songs and charts.",
-        "caution": "ONLY for offline testing purposes. DO NOT use on online networks, you could get banned as they handle this server-side.",
-        "patches": [
-            {
-                "start": 7000000,
-                "signature": "83 C4 30 5F C3 48 8B 5C 24 40 32 C0 48 8B 74 24",
-                "adjust": 10,
-                "data": "B0 01"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Unlock Step Up Level Adjustment",
-        "description": "Unlocks Step Up level adjustment without requiring 8th Dan.",
-        "patches": [
-            {
-                "start": 7000000,
-                "signature": "0F 4D DD FF C7",
-                "data": "8B DD 90"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Unlock Step Up Dan Practice Folders",
-        "description": "Unlocks Step Up dan practice folders.",
-        "patches": [
-            {
-                "start": 7000000,
-                "signature": "0F 84 ?? ?? ?? ?? 85 C0 0F 8E",
-                "data": "90 90 90 90 90 90"
-            },
-            {
-                "start": 7000000,
-                "signature": "0F 8E ?? ?? ?? ?? 66 0F 6F 05 ?? ?? ?? ?? 4C 8D 7C 24",
-                "data": "90 90 90 90 90 90"
-            },
-            {
-                "start": 7000000,
-                "signature": "74 ?? E8 ?? ?? ?? ?? 48 8B D8 E8 ?? ?? ?? ?? 45 33 C0",
-                "data": "90 90"
-            }
-        ]
-    },
-    {
-        "type": "union",
-        "name": "Force Audio Output Mode",
-        "description": "Forces the game to use a specific audio protocol.",
-        "start": 9000000,
-        "signature": "FF 50 08 E8 ?? ?? ?? FF 83 78 08 03 74 0D",
-        "adjust": 3,
-        "patches": [
-            {
-                "name": "Default",
-                "data": "default"
-            },
-            {
-                "name": "WASAPI",
-                "data": "BB 00 00 00 00 EB 16 90 90"
-            },
-            {
-                "name": "ASIO",
-                "data": "BB 01 00 00 00 EB 16 90 90"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Force Max V-Discs",
-        "description": "Forces your V-Discs to be maxed out.",
-        "caution": "May(?) cause issues on online networks, use at your own risk.",
-        "patches": [
-            {
-                "start": 4000000,
-                "signature": "4D 85 C0 0F 84 72 01 00 00 48 89 5C 24 10 48 89",
-                "adjust": 3,
-                "data": "90 E9"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Remove Camera Boot Delay",
-        "description": "Removes the camera delay at boot.",
-        "patches": [
-            {
-                "start": 7000000,
-                "signature": "00 48 8B C8 E8 67 FE FF FF 8B 43 34 3D 58 02 00",
-                "adjust": 13,
-                "data": "01 00"
-            },
-            {
-                "start": 8000000,
-                "signature": "48 8B 07 48 8B CF FF 50 48 84 C0 75 12 B9 E8 03",
-                "adjust": 15,
-                "data": "01 00"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Bypass Lightning Monitor Error",
-        "description": "Bypasses a monitor-related error in Lightning mode.",
-        "patches": [
-            {
-                "start": 8000000,
-                "signature": "8C ?? ?? 00 00 E8 ?? ?? 00 00 83 78 08 03 0F 85 ?? ?? 00 00",
-                "adjust": 14,
-                "data": "90 E9"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Bypass CAMERA DEVICE ERROR Prompt",
-        "description": "Bypasses CAMERA DEVICE ERROR prompt, in case you're having issues.",
-        "caution": "Shouldn't be needed on spice2x. Use \"-iidxdisablecams\" or \"-iidxtdjcamhook\" with a webcam instead.",
-        "patches": [
-            {
-                "offset": 8000000,
-                "signature": "48 8B CB E8 ?? EC FF FF 84 C0 0F 84 AA 00 00 00",
-                "adjust": 11,
-                "data": "81"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Show Lightning Model Folder in LDJ",
-        "description": "Shows the Lightning Model Folder normally exclusive to TDJ, in LDJ.",
-        "patches": [
-            {
-                "start": 7000000,
-                "signature": "E8 ?? ?? ?? 00 83 78 08 03 75 0A 8B D3 48 8B CF",
-                "adjust": 9,
-                "data": "90 90"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Force LDJ LED Ticker Speed",
-        "description": "Forces the legacy cabinets LED Ticker to run at a normal speed even if the game runs at 120hz.",
-        "caution": "Useless for home play.",
-        "patches": [
-            {
-                "start": 8000000,
-                "signature": "E8 ?? ?? ?? FF 48 8B ?? BA 78 00 00 00 8B 48 34 E8",
-                "adjust": 9,
-                "data": "F0",
-                "patchall": true
-            },
-            {
-                "start": 8000000,
-                "signature": "E8 ?? ?? ?? FF 48 8B 03 BA 78 00 00 00 8B 48 34 E8",
-                "adjust": 1,
-                "data": "?D"
-            },
-            {
-                "start": 5000000,
-                "signature": "28 C3 40 53 48 83 EC 20 8B D9 E8 ?? ?? ?? 00 8B D3 48 8B C8 48 83 C4 20 5B E9 ?? ?? ?? 00 CC CC CC CC",
-                "adjust": 32,
-                "data": "D1 F9"
-            },
-            {
-                "start": 8000000,
-                "signature": "C0 7E 51 8B 0D ?? ?? ?? 0A 85 C9 74 47 8B 05",
-                "adjust": 3,
-                "data": "B9 20 00 00 00 90"
-            },
-            {
-                "start": 8000000,
-                "signature": "E8 ?? 3D 01 00 2B 58 08 3B FB 7C 12 48 8B 0E 48 8D 15 6A",
-                "adjust": 18,
-                "data": "67"
-            },
-            {
-                "start": 8000000,
-                "signature": "09 01 32 C0 48 8B 5C 24 40 48 8B 6C 24 48 48 8B 74 24 50 48 83 C4 30 5F C3 CC CC CC",
-                "adjust": 25,
-                "data": "8B 71 3C"
-            },
-            {
-                "start": 8000000,
-                "signature": "E8 ?? ?? ?? FF E8 ?? ?? ?? FF 84 C0 74 33 8B 4B 3C",
-                "adjust": 14,
-                "data": "D1 FE 90"
-            },
-            {
-                "start": 8000000,
-                "signature": "B8 89 88 88 88 F7 E9 03 D1 C1 FA 04 8B C2 C1 E8",
-                "adjust": 6,
-                "data": "EE 01 F2"
-            },
-            {
-                "start": 8000000,
-                "signature": "E8 1F 03 D0 6B C2 1E 2B C8 83 F9 14 B9 FF 3F 03",
-                "adjust": 7,
-                "data": "29 C6"
-            },
-            {
-                "start": 8000000,
-                "signature": "8B C2 C1 E8 1F 03 D0 6B C2 1E 2B C8 83 F9 14 B9",
-                "adjust": 13,
-                "data": "FE"
-            },
-            {
-                "start": 8000000,
-                "signature": "28 C4 C3 CC CC CC CC CC CC CC CC CC CC CC CC CC",
-                "adjust": 7,
-                "data": "44 8B 49 18 41 D1 F9 EB 10"
-            },
-            {
-                "start": 8000000,
-                "signature": "E8 ?? ?? ?? FF 44 8B 43 18 B8 1F 85 EB 51 41 F7 E8",
-                "adjust": 5,
-                "data": "45 8B C1 90"
-            },
-            {
-                "start": 8000000,
-                "signature": "5C E9 72 FD FF FF CC CC",
-                "adjust": 2,
-                "data": "59"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Force LDJ Software Video Decoder",
-        "description": "Forces LDJ Software Video Decoder for all boot modes, could help on systems that can't load videos properly.",
-        "patches": [
-            {
-                "start": 8000000,
-                "signature": "48 8B A8 00 80 01 00 0F 85 86 00 00 00 E8",
-                "adjust": 7,
-                "data": "90 90 90 90 90 90"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Force LDJ Custom Timing/Adapter FPS",
-        "description": "Forces Custom Timing/Adapter FPS in LDJ.",
-        "caution": "Enable this if \"Custom LDJ Timing/Adapter FPS\" is not default. May cause desync. Consider \"Force TDJ/LDJ Mode\" patches instead.",
-        "patches": [
-            {
-                "start": 6000000,
-                "signature": "66 0F 6E F1 0F 5B F6 75 13 E8",
-                "adjust": 7,
-                "data": "EB"
-            },
-            {
-                "offset": 8000000,
-                "signature": "83 78 08 02 B8 3C 00 00 00 74 03",
-                "adjust": 9,
-                "data": "90 90"
-            }
-        ]
-    },
-    {
-        "type": "union",
-        "name": "Choose LDJ Custom Timing/Adapter FPS",
-        "description": "Sets the Timing/Adapter FPS in LDJ.",
-        "caution": "Requires \"Force Custom Timing/Adapter in LDJ\" to be enabled. May cause desync. Consider \"Force TDJ/LDJ Mode\" patches instead.",
-        "start": 9000000,
-        "signature": "C7 45 DB 3C 00 00 00 C7 45 FF 01 00 00 00 48 8B 45 D7 48 89 45 03 C7 45 D7 01 00 00 00 C7 45 DB 3C 00 00 00",
-        "patches": [
-            {
-                "name": "60 FPS",
-                "data": "default"
-            },
-            {
-                "name": "120 FPS",
-                "data": "C7 45 DB 78 00 00 00 C7 45 FF 01 00 00 00 48 8B 45 D7 48 89 45 03 C7 45 D7 01 00 00 00 C7 45 DB 78 00 00 00"
-            }
-        ]
-    },
-    {
-        "type": "union",
-        "name": "Choose Fullscreen Monitor Check FPS Target",
-        "description": "Sets the Monitor Check FPS Target.",
-        "caution": "May cause desync. Consider \"Force TDJ/LDJ Mode\" patches instead.",
+  {
+    "gameCode": "LDJ",
+    "dllName": "bm2dx.dll",
+    "lastUpdated": "2025-08-01",
+    "source": "https://sp2x.two-torial.xyz/"
+  },
+  {
+    "type": "memory",
+    "name": "Shared Mode WASAPI",
+    "description": "Allows for non-exclusive WASAPI audio.",
+    "caution": "Requires 48000Hz sample rate. Will slightly increase audio latency. Try combining this with the Low Latency Shared Audio option from spice2x.",
+    "patches": [
+      {
+        "start": 4000000,
+        "signature": "00 48 33 C4 48 89 45 48 49 8B D8 44 8B F2 48 8B",
+        "adjust": 11,
+        "data": "4D 31 F6"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Increase Game Volume",
+    "description": "Increases game volume as it can be a bit low on home setups by default.",
+    "patches": [
+      {
+        "start": 8000000,
+        "signature": "0F 28 D7 8B D7 FF 90 ?? 00 00 00 90 48 8B 5C 24",
+        "adjust": 5,
+        "data": "90 90 90 90 90 90"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Force TDJ Mode",
+    "description": "Forces the game to run as TDJ (010, 120Hz) instead of LDJ (012, 60Hz).",
+    "patches": [
+      {
+        "start": 8000000,
+        "signature": "C7 06 02 00 00 00 45 89 27 48 85 FF 74 54 48 8B",
+        "adjust": 2,
+        "data": "03"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Force LDJ Mode",
+    "description": "Forces the game to run as LDJ (012, 60Hz) instead of TDJ (010, 120Hz).",
+    "patches": [
+      {
+        "offset": 9000000,
+        "signature": "E8 AD F8 FF FF 90 41 C7 06 03 00 00 00",
+        "adjust": 9,
+        "data": "02"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Standard/Menu Timer Freeze",
+    "description": "Freezes all non-premium area timers.",
+    "patches": [
+      {
         "start": 7000000,
-        "signature": "04 00 00 C7 45 B8 ?? ?? 00 00 C7 45 BC 16 00 00",
+        "signature": "E8 ?? ?? ?? FF 84 C0 0F 84 ?? 00 00 00 FF 8B",
+        "adjust": 8,
+        "data": "81"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Premium Free Timer Freeze",
+    "description": "Freezes all premium area timers.",
+    "patches": [
+      {
+        "start": 7000000,
+        "signature": "40 53 48 83 EC 20 83 79 ?? 00 48 8B D9 7E 3E 80",
+        "adjust": 13,
+        "data": "EB"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "(BROKEN) Video Purchase Timer Freeze",
+    "description": "Freezes the subscreen countdown on the transition from result to music select.",
+    "caution": "Only useful with a TDJ (010) dll.",
+    "patches": [
+      {
+        "start": 8000000,
+        "signature": "E8 1E F5 FF FF 84 C0 74 35 8B 47 64 85 C0 7E 2E FF C8",
+        "adjust": 16,
+        "data": "90 90"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "CS-style Song Start Delay",
+    "description": "Lets you pause at the start of a song by holding Start.",
+    "patches": [
+      {
+        "start": 7000000,
+        "signature": "7D ?? 40 84 F6 74 09 C7 47 14 00 00 00 00",
+        "data": "90 90"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "All Notes Preview 12s",
+    "description": "Always shows note previews at the start of a song, no matter the level.",
+    "patches": [
+      {
+        "start": 6000000,
+        "signature": "B9 0C 00 00 00 41 BC 05 00 00 00 84 C0 44 0F 45",
+        "adjust": 7,
+        "data": "0C",
+        "patchall": true
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Unscramble Touch Screen Keypad in TDJ",
+    "description": "Unscrambles the touchscreen's Keypad in TDJ.",
+    "patches": [
+      {
+        "start": 8000000,
+        "signature": "4D 03 C8 49 F7 F1 89 53",
+        "data": "BA 0C 00 00 00 90"
+      },
+      {
+        "start": 8000000,
+        "signature": "33 D2 48 F7 F3 48 8B 9C 24",
+        "data": "BA 0C 00 00 00"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "(BROKEN) Skip Decide Screen",
+    "description": "Skips the splash animation that appears upon starting a song.",
+    "patches": [
+      {
+        "start": 5000000,
+        "signature": "48 8B C4 55 41 56 41 57 48 8D 68 ?? 48 81 EC 00 01 00 00",
+        "data": "48 8B C1 C3"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Quick Retry",
+    "description": "Makes retrying a song quicker.",
+    "patches": [
+      {
+        "start": 7000000,
+        "signature": "CC CC CC CC CC CC CC CC 40 53 48 83 EC 20 8B CA 8B DA E8 ?? ?? ?? 00 84 C0 74 0C 8B CB 48 83 C4 20 5B E9 ?? ?? ?? FF 32 C0 48 83 C4 20 5B C3",
+        "adjust": 8,
+        "data": "B0 01 C3 90 90 90"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "(BROKEN) Quicker Quick Retry",
+    "description": "Makes retrying a song even quicker. Shortens the duration of the 'Stage Failed' animation.",
+    "caution": "To be used along with \"Quick Retry\".",
+    "patches": [
+      {
+        "start": 7000000,
+        "signature": "7C 79 E8 ?? ?? 02 00 48 8D 0D B2 F2 FF FF 4C 8B",
+        "data": "90 90"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "(BROKEN) Mute Navigator Voices",
+    "description": "Mutes voices you hear when carding in/out of the game.",
+    "patches": [
+      {
+        "start": 8000000,
+        "signature": "E8 F3 FE FF FF 84 C0 75 0B 8B CB E8 78 FE FF FF",
+        "adjust": 7,
+        "data": "90 90"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Disable Category Selection",
+    "description": "Disables the category selection feature that appears in the upper right corner of song select.",
+    "caution": "You will be stuck on what you previously had selected. If you want to see everything, first choose ALL and exit a credit properly, then enable this.",
+    "patches": [
+      {
+        "start": 10000000,
+        "signature": "63 61 74 65 67 6F 72 79 5F 73 65 6C 5F 66 72 61 6D 65",
+        "adjust": 8,
+        "data": "00"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Disable News Sound",
+    "description": "Disables news sounds.",
+    "patches": [
+      {
+        "start": 10000000,
+        "signature": "73 79 73 73 64 5F 6E 65 77 73 5F 63 75 74 69 6E 5F 73 65",
+        "data": "73 79 73 73 64 5F 64 75 6D 6D 79 00 00 00 00 00 00 00 00"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Disable Background Movies",
+    "description": "Disables background movies from playing during gameplay.",
+    "patches": [
+      {
+        "start": 7000000,
+        "signature": "30 02 00 00 41 8B F8 0F B6 F2 48 8B D9 48 85 C9 0F 84 ?? 00 00 00",
+        "adjust": 16,
+        "data": "31 C0 90 90 90 90"
+      },
+      {
+        "start": 7000000,
+        "signature": "89 ?? ?? 00 00 48 85 C9 74 07 B2 01 E8",
+        "adjust": 8,
+        "data": "EB"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Disable Recording Lock",
+    "description": "Allows ALL songs to be recorded in-game.",
+    "caution": "Only useful with a TDJ (010) dll.",
+    "patches": [
+      {
+        "start": 7000000,
+        "signature": "E8 ?? ?? ?? FF 84 C0 74 17 40 84 FF 74 12 48 8B",
+        "adjust": 9,
+        "data": "90 90 90"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Faster Video Uploads",
+    "description": "Makes video upload put request 1000 times faster in theory, by expanding InternetWriteFile() body chunk size to 0x3200000.",
+    "caution": "Only useful with a TDJ (010) dll.",
+    "patches": [
+      {
+        "start": 9000000,
+        "signature": "00 48 85 C9 0F 84 8B 00 00 00 41 BE 00 32 00 00",
+        "adjust": 12,
+        "data": "00 00 20 03"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Force 120 FPS Recording Output .mp4",
+    "description": "Forces the game to record at 120 FPS.",
+    "caution": "Only useful with a TDJ (010) dll. Also make sure your hardware and network support this!",
+    "patches": [
+      {
+        "start": 9000000,
+        "signature": "80 07 00 00 38 04 00 00 3C 00 00 00 01 00 00 00",
+        "adjust": 8,
+        "data": "78"
+      }
+    ]
+  },
+  {
+    "type": "hardcoded",
+    "name": "Reroute FREE PLAY Text",
+    "description": "Reroute FREE PLAY Text to show something different.",
+    "caution": "Requires FREE PLAY enabled in the test menu.",
+    "id": "ldj_001"
+  },
+  {
+    "type": "hardcoded",
+    "name": "Reroute PASELI: ****** Text To Song Title/Ticker Information",
+    "description": "Reroute PASELI: ****** Text to Song Title/Ticker Information.",
+    "id": "ldj_002"
+  },
+  {
+    "type": "memory",
+    "name": "Hide All Bottom Text",
+    "description": "Hides all text typically found in the bottom corners of the screen such as \"PASELI\" or \"FREE PLAY\".",
+    "patches": [
+      {
+        "start": 10000000,
+        "signature": "43 52 45 44 49 54 3A 20 25 64 20 43 4F 49 4E 3A 20 25 64 20 2F 20 25 64 00 00 00 00 00 00 00 00 43 52 45 44 49 54 3A 20 25 64 00 00 00 00 00 00 50 41 53 45 4C 49 3A 20 4E 4F 54 20 41 56 41 49 4C 41 42 4C 45 00 00 00 45 58 54 52 41 20 50 41 53 45 4C 49 3A 20 25 64 00 00 00 00 00 00 00 00 45 58 54 52 41 20 50 41 53 45 4C 49 3A 20 25 73 00 00 00 00 00 00 00 00 50 41 53 45 4C 49 3A 20 25 64 00 00 00 00 00 00 50 41 53 45 4C 49 3A 20 25 73 00 00 00 00 00 00 50 41 53 45 4C 49 3A 20 2A 2A 2A 2A 2A 2A 00 00 20 2B 20 25 64 00 00 00 20 2B 20 25 73 00 00 00 50 41 53 45 4C 49 3A 20 4E 4F 20 41 43 43 4F 55 4E 54 00 00 00 00 00 00 49 4E 53 45 52 54 20 43 4F 49 4E 5B 53 5D 00 00 50 41 53 45 4C 49 3A 20 2A 2A 2A 2A 2A 2A 20 2B 20 30 30 30 30 30 00 00 43 52 45 44 49 54 3A 20 39 39 20 43 4F 49 4E 3A 20 39 39 20 2F 20 31 30",
+        "data": "NUL"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Hide Time Limit Display on Results Screen",
+    "description": "Hides the time limit display on results screen.",
+    "patches": [
+      {
+        "start": 7000000,
+        "signature": "F6 84 C0 74 58 E8 ?? ?? ?? FF 8B 48 ?? B8 89 88",
+        "adjust": 3,
+        "data": "EB"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Hide Background Color Banners on Song List",
+    "description": "Hides all \"listb_\" elements.",
+    "patches": [
+      {
+        "signature": "6C 69 73 74 62 5F",
+        "adjust": 5,
+        "data": "00",
+        "patchall": true
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "(BROKEN) Hide Measure Lines",
+    "description": "Hides measure lines during gameplay.",
+    "patches": [
+      {
+        "start": 7000000,
+        "signature": "E8 ?? ?? ?? 00 EB 3C 83 F8 04 75 37 81 FE D3 02",
+        "adjust": 10,
+        "data": "EB"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Hide Judge Combo Count",
+    "description": "Hides the Combo Count during gameplay.",
+    "patches": [
+      {
+        "start": 8000000,
+        "signature": "8B 91 F0 24 00 00 FF C0 89 81 F4 24 00 00",
         "adjust": 6,
-        "patches": [
-            {
-                "name": "60 FPS",
-                "data": "3C 00"
-            },
-            {
-                "name": "120 FPS",
-                "data": "78 00"
-            }
-        ]
-    },
-    {
-        "type": "memory",
-        "name": "Debug Mode",
-        "description": "While in game, press F1 to enable menu. (Disables Profile/Score saving)",
-        "caution": "Ignore if you're not sure know what this does.",
-        "patches": [
-            {
-                "start": 8000000,
-                "signature": "C4 20 5F C3 CC CC CC 32 C0 C3",
-                "adjust": 7,
-                "data": "B0 01"
-            }
-        ]
-    }
+        "data": "31 C0"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Dark Gameplay Mode",
+    "description": "Makes a lot of gameplay UI elements completely black.",
+    "patches": [
+      {
+        "start": 7000000,
+        "signature": "E8 ?? ?? ?? 00 84 C0 74 4C 49 8B 4E 10 48",
+        "adjust": 5,
+        "data": "90 90"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Unlock All Songs and Charts",
+    "description": "Unlocks all songs and charts.",
+    "caution": "ONLY for offline testing purposes. DO NOT use on online networks, you could get banned as they handle this server-side.",
+    "patches": [
+      {
+        "start": 7000000,
+        "signature": "83 C4 30 5F C3 48 8B 5C 24 40 32 C0 48 8B 74 24",
+        "adjust": 10,
+        "data": "B0 01"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Unlock Step Up Level Adjustment",
+    "description": "Unlocks Step Up level adjustment without requiring 8th Dan.",
+    "patches": [
+      {
+        "start": 7000000,
+        "signature": "0F 4D DD FF C7",
+        "data": "8B DD 90"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Unlock Step Up Dan Practice Folders",
+    "description": "Unlocks Step Up dan practice folders.",
+    "patches": [
+      {
+        "start": 7000000,
+        "signature": "0F 84 ?? ?? ?? ?? 85 C0 0F 8E",
+        "data": "90 90 90 90 90 90"
+      },
+      {
+        "start": 7000000,
+        "signature": "0F 8E ?? ?? ?? ?? 66 0F 6F 05 ?? ?? ?? ?? 4C 8D 7C 24",
+        "data": "90 90 90 90 90 90"
+      },
+      {
+        "start": 7000000,
+        "signature": "74 ?? E8 ?? ?? ?? ?? 48 8B D8 E8 ?? ?? ?? ?? 45 33 C0",
+        "data": "90 90"
+      }
+    ]
+  },
+  {
+    "type": "union",
+    "name": "Force Audio Output Mode",
+    "description": "Forces the game to use a specific audio protocol.",
+    "start": 9000000,
+    "signature": "FF 50 08 E8 ?? ?? ?? FF 83 78 08 03 74 0D",
+    "adjust": 3,
+    "patches": [
+      {
+        "name": "Default",
+        "data": "default"
+      },
+      {
+        "name": "WASAPI",
+        "data": "BB 00 00 00 00 EB 16 90 90"
+      },
+      {
+        "name": "ASIO",
+        "data": "BB 01 00 00 00 EB 16 90 90"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Force Max V-Discs",
+    "description": "Forces your V-Discs to be maxed out.",
+    "caution": "May(?) cause issues on online networks, use at your own risk.",
+    "patches": [
+      {
+        "start": 4000000,
+        "signature": "4D 85 C0 0F 84 72 01 00 00 48 89 5C 24 10 48 89",
+        "adjust": 3,
+        "data": "90 E9"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Remove Camera Boot Delay",
+    "description": "Removes the camera delay at boot.",
+    "patches": [
+      {
+        "start": 7000000,
+        "signature": "00 48 8B C8 E8 67 FE FF FF 8B 43 34 3D 58 02 00",
+        "adjust": 13,
+        "data": "01 00"
+      },
+      {
+        "start": 8000000,
+        "signature": "48 8B 07 48 8B CF FF 50 48 84 C0 75 12 B9 E8 03",
+        "adjust": 15,
+        "data": "01 00"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Bypass Lightning Monitor Error",
+    "description": "Bypasses a monitor-related error in Lightning mode.",
+    "patches": [
+      {
+        "start": 8000000,
+        "signature": "8C ?? ?? 00 00 E8 ?? ?? 00 00 83 78 08 03 0F 85 ?? ?? 00 00",
+        "adjust": 14,
+        "data": "90 E9"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Bypass CAMERA DEVICE ERROR Prompt",
+    "description": "Bypasses CAMERA DEVICE ERROR prompt, in case you're having issues.",
+    "caution": "Shouldn't be needed on spice2x. Use \"-iidxdisablecams\" or \"-iidxtdjcamhook\" with a webcam instead.",
+    "patches": [
+      {
+        "offset": 8000000,
+        "signature": "48 8B CB E8 ?? EC FF FF 84 C0 0F 84 AA 00 00 00",
+        "adjust": 11,
+        "data": "81"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Show Lightning Model Folder in LDJ",
+    "description": "Shows the Lightning Model Folder normally exclusive to TDJ, in LDJ.",
+    "patches": [
+      {
+        "start": 7000000,
+        "signature": "E8 ?? ?? ?? 00 83 78 08 03 75 0A 8B D3 48 8B CF",
+        "adjust": 9,
+        "data": "90 90"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Force LDJ LED Ticker Speed",
+    "description": "Forces the legacy cabinets LED Ticker to run at a normal speed even if the game runs at 120hz.",
+    "caution": "Useless for home play.",
+    "patches": [
+      {
+        "start": 8000000,
+        "signature": "E8 ?? ?? ?? FF 48 8B ?? BA 78 00 00 00 8B 48 34 E8",
+        "adjust": 9,
+        "data": "F0",
+        "patchall": true
+      },
+      {
+        "start": 8000000,
+        "signature": "E8 ?? ?? ?? FF 48 8B 03 BA 78 00 00 00 8B 48 34 E8",
+        "adjust": 1,
+        "data": "?D"
+      },
+      {
+        "start": 5000000,
+        "signature": "28 C3 40 53 48 83 EC 20 8B D9 E8 ?? ?? ?? 00 8B D3 48 8B C8 48 83 C4 20 5B E9 ?? ?? ?? 00 CC CC CC CC",
+        "adjust": 32,
+        "data": "D1 F9"
+      },
+      {
+        "start": 8000000,
+        "signature": "C0 7E 51 8B 0D ?? ?? ?? 0A 85 C9 74 47 8B 05",
+        "adjust": 3,
+        "data": "B9 20 00 00 00 90"
+      },
+      {
+        "start": 8000000,
+        "signature": "E8 ?? ?? 01 00 2B 58 08 3B FB 7C 12 48 8B 0E 48 8D 15 6A",
+        "adjust": 18,
+        "data": "67"
+      },
+      {
+        "start": 8000000,
+        "signature": "01 32 C0 48 8B 5C 24 40 48 8B 6C 24 48 48 8B 74 24 50 48 83 C4 30 5F C3 CC CC CC",
+        "adjust": 24,
+        "data": "8B 71 3C"
+      },
+      {
+        "start": 8000000,
+        "signature": "E8 ?? ?? ?? FF E8 ?? ?? ?? FF 84 C0 74 33 8B 4B 3C",
+        "adjust": 14,
+        "data": "D1 FE 90"
+      },
+      {
+        "start": 8000000,
+        "signature": "B8 89 88 88 88 F7 E9 03 D1 C1 FA 04 8B C2 C1 E8",
+        "adjust": 6,
+        "data": "EE 01 F2"
+      },
+      {
+        "start": 8000000,
+        "signature": "E8 1F 03 D0 6B C2 1E 2B C8 83 F9 14 B9 FF 3F 03",
+        "adjust": 7,
+        "data": "29 C6"
+      },
+      {
+        "start": 8000000,
+        "signature": "8B C2 C1 E8 1F 03 D0 6B C2 1E 2B C8 83 F9 14 B9",
+        "adjust": 13,
+        "data": "FE"
+      },
+      {
+        "start": 8000000,
+        "signature": "28 C4 C3 CC CC CC CC CC CC CC CC CC CC CC CC CC",
+        "adjust": 7,
+        "data": "44 8B 49 18 41 D1 F9 EB 10"
+      },
+      {
+        "start": 8000000,
+        "signature": "E8 ?? ?? ?? FF 44 8B 43 18 B8 1F 85 EB 51 41 F7 E8",
+        "adjust": 5,
+        "data": "45 8B C1 90"
+      },
+      {
+        "start": 8000000,
+        "signature": "5C E9 72 FD FF FF CC CC",
+        "adjust": 2,
+        "data": "59"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Force LDJ Software Video Decoder",
+    "description": "Forces LDJ Software Video Decoder for all boot modes, could help on systems that can't load videos properly.",
+    "patches": [
+      {
+        "start": 8000000,
+        "signature": "48 8B A8 00 80 01 00 0F 85 86 00 00 00 E8",
+        "adjust": 7,
+        "data": "90 90 90 90 90 90"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Force LDJ Custom Timing/Adapter FPS",
+    "description": "Forces Custom Timing/Adapter FPS in LDJ.",
+    "caution": "Enable this if \"Custom LDJ Timing/Adapter FPS\" is not default. May cause desync. Consider \"Force TDJ/LDJ Mode\" patches instead.",
+    "patches": [
+      {
+        "start": 6000000,
+        "signature": "66 0F 6E F1 0F 5B F6 75 13 E8",
+        "adjust": 7,
+        "data": "EB"
+      },
+      {
+        "offset": 8000000,
+        "signature": "83 78 08 02 B8 3C 00 00 00 74 03",
+        "adjust": 9,
+        "data": "90 90"
+      }
+    ]
+  },
+  {
+    "type": "union",
+    "name": "Choose LDJ Custom Timing/Adapter FPS",
+    "description": "Sets the Timing/Adapter FPS in LDJ.",
+    "caution": "Requires \"Force Custom Timing/Adapter in LDJ\" to be enabled. May cause desync. Consider \"Force TDJ/LDJ Mode\" patches instead.",
+    "start": 9000000,
+    "signature": "C7 45 DB 3C 00 00 00 C7 45 FF 01 00 00 00 48 8B 45 D7 48 89 45 03 C7 45 D7 01 00 00 00 C7 45 DB 3C 00 00 00",
+    "patches": [
+      {
+        "name": "60 FPS",
+        "data": "default"
+      },
+      {
+        "name": "120 FPS",
+        "data": "C7 45 DB 78 00 00 00 C7 45 FF 01 00 00 00 48 8B 45 D7 48 89 45 03 C7 45 D7 01 00 00 00 C7 45 DB 78 00 00 00"
+      }
+    ]
+  },
+  {
+    "type": "union",
+    "name": "Choose Fullscreen Monitor Check FPS Target",
+    "description": "Sets the Monitor Check FPS Target.",
+    "caution": "May cause desync. Consider \"Force TDJ/LDJ Mode\" patches instead.",
+    "start": 7000000,
+    "signature": "04 00 00 C7 45 B8 ?? ?? 00 00 C7 45 BC 16 00 00",
+    "adjust": 6,
+    "patches": [
+      {
+        "name": "60 FPS",
+        "data": "3C 00"
+      },
+      {
+        "name": "120 FPS",
+        "data": "78 00"
+      }
+    ]
+  },
+  {
+    "type": "memory",
+    "name": "Debug Mode",
+    "description": "While in game, press F1 to enable menu. (Disables Profile/Score saving)",
+    "caution": "Ignore if you're not sure know what this does.",
+    "patches": [
+      {
+        "start": 8000000,
+        "signature": "C4 20 5F C3 CC CC CC 32 C0 C3",
+        "adjust": 7,
+        "data": "B0 01"
+      }
+    ]
+  }
 ]
