@@ -143,12 +143,13 @@
   },
   {
     "type": "memory",
-    "name": "(BROKEN) Skip Decide Screen",
+    "name": "Skip Decide Screen",
     "description": "Skips the splash animation that appears upon starting a song.",
     "patches": [
       {
         "start": 5000000,
-        "signature": "48 8B C4 55 41 56 41 57 48 8D 68 ?? 48 81 EC 00 01 00 00",
+        "signature": "48 C7 41 40 01 00 00 00 89 41 48 48 8B C1 C3 CC 48 8B C4 55",
+        "adjust": 16,
         "data": "48 8B C1 C3"
       }
     ]
@@ -168,25 +169,25 @@
   },
   {
     "type": "memory",
-    "name": "(BROKEN) Quicker Quick Retry",
+    "name": "Quicker Quick Retry",
     "description": "Makes retrying a song even quicker. Shortens the duration of the 'Stage Failed' animation.",
     "caution": "To be used along with \"Quick Retry\".",
     "patches": [
       {
         "start": 7000000,
-        "signature": "7C 79 E8 ?? ?? 02 00 48 8D 0D B2 F2 FF FF 4C 8B",
+        "signature": "7C 79 E8 ?? ?? 02 00 48 8D 0D ?? ?? FF FF 4C 8B",
         "data": "90 90"
       }
     ]
   },
   {
     "type": "memory",
-    "name": "(BROKEN) Mute Navigator Voices",
+    "name": "Mute Navigator Voices",
     "description": "Mutes voices you hear when carding in/out of the game.",
     "patches": [
       {
         "start": 8000000,
-        "signature": "E8 F3 FE FF FF 84 C0 75 0B 8B CB E8 78 FE FF FF",
+        "signature": "E8 F3 FE FF FF 84 C0 75 0B 8B CB E8 ?? FE FF FF",
         "adjust": 7,
         "data": "90 90"
       }
