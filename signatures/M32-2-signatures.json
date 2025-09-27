@@ -1,0 +1,19 @@
+[
+  {
+    "gameCode": "M32",
+    "dllName": "boot.dll",
+    "lastUpdated": "2025-09-17",
+    "source": "https://sp2x.two-torial.xyz/"
+  },
+  {
+    "type": "memory",
+    "name": "Prevent CACHE/ and TMP/ folders creation",
+    "patches": [
+      {
+        "start": 2000,
+        "signature": "33D2488BCBFF",
+        "data": "EB1F"
+      }
+    ]
+  }
+]
