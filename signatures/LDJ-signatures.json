@@ -2,20 +2,8 @@
   {
     "gameCode": "LDJ",
     "dllName": "bm2dx.dll",
-    "lastUpdated": "2025-09-25",
+    "lastUpdated": "2025-09-30",
     "source": "https://sp2x.two-torial.xyz/"
-  },
-  {
-    "type": "memory",
-    "name": "ASIO Compatibility Fix",
-    "description": "Fixes a bug in bm2dx that causes incompatibility with many ASIO drivers.",
-    "patches": [
-      {
-        "start": 4000000,
-        "signature": "FF 50 ?? 45 33 C9 45 33 C0 41 8D 51",
-        "data": "90 90 90"
-      }
-    ]
   },
   {
     "type": "memory",
